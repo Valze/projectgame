@@ -15,6 +15,9 @@ public abstract class Card {
 	public String getName() {
 		return this.name;
 	}
+	public Rarity getRarity() {
+		return this.rarity;
+	}
 	public int getManaCost() {
 		return this.manaCost;
 	}
