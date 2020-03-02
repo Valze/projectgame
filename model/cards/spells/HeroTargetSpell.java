@@ -1,5 +1,5 @@
 package model.cards.spells;
 
-public interface HeroTargetSpell {
+public interface HeroTargetSpell{
 
 }
