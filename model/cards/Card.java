@@ -6,6 +6,7 @@ public abstract class Card {
 	private Rarity rarity;
 	public Card() {
 		
+		
 	}
 	public Card(String name, int manaCost, Rarity rarity) {
 		this.name = name;
@@ -15,11 +16,11 @@ public abstract class Card {
 	public String getName() {
 		return this.name;
 	}
-	public Rarity getRarity() {
-		return this.rarity;
-	}
 	public int getManaCost() {
 		return this.manaCost;
+	}
+	public Rarity getRarity() {
+		return this.rarity;
 	}
 	public void setName(String name) {
 		this.name = name;
