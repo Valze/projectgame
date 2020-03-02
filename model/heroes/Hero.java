@@ -1,8 +1,10 @@
 package model.heroes;
 
 import java.util.ArrayList;
-
+import java.io.*;
 import model.cards.Card;
+import model.cards.Rarity;
+import model.cards.minions.Icehowl;
 import model.cards.minions.Minion;
 
 public abstract class Hero {
@@ -53,5 +55,62 @@ public abstract class Hero {
 	}
 	public void setCurrentManaCrystals(int currentManaCrystals) {
 		this.currentManaCrystals = currentManaCrystals;
+	}
+	public static ArrayList<Minion> getAllNeutralMinions(String filePath) throws IOException{
+		BufferedReader br = new BufferedReader(new FileReader(filePath));
+		ArrayList<Minion> minions = new ArrayList<Minion>();
+		while(br.readLine()!=null){
+			String[] currentLine = br.readLine().split(",");
+			String name = currentLine[0];
+			if(name.equals("Icehowl")) {
+				Icehowl icehowl = new Icehowl();
+				minions.add(icehowl);
+				continue;
+			}
+			int manaCost = Integer.parseInt(currentLine[1]);
+			Rarity rarity = null;
+			switch(currentLine[2]) {
+			case "b": rarity = Rarity.BASIC;
+			case "c": rarity = Rarity.COMMON;
+			case "r": rarity = Rarity.RARE;
+			case "e": rarity = Rarity.EPIC;
+			case "l": rarity = Rarity.LEGENDARY;
+			}
+			int attack = Integer.parseInt(currentLine[3]);
+			int maxHP = Integer.parseInt(currentLine[4]);
+			boolean taunt = Boolean.parseBoolean(currentLine[5]);
+			boolean divine = Boolean.parseBoolean(currentLine[6]);
+			boolean charge = Boolean.parseBoolean(currentLine[7]);
+			Minion minion = new Minion(name, manaCost, rarity, attack, maxHP, taunt, divine, charge);
+			minions.add(minion);
+		}
+		br.close();
+		return minions;
+	}
+	public final static ArrayList<Minion> getNeutralMinions(ArrayList<Minion> minions, int count) throws IOException{
+		int[] repeated = new int[minions.size()];
+		ArrayList<Minion> minionHand = null;
+		int random = 0;
+		for(int i = 0; i<count; i++) {
+			random =(int) (Math.random()*(minions.size()));
+			if(repeated[random]==2) {
+				i--;
+				continue;
+			}
+			Minion toadd = minions.get(random);
+			minionHand.add(toadd);
+			if(toadd.getRarity()==Rarity.LEGENDARY) {
+				repeated[random] = 2;
+			}
+			else {
+				repeated[random]++;
+			}
+		}
+		return minionHand;
+	}
+	public void buildDeck() throws IOException{
+		ArrayList<Minion> minions = getAllNeutralMinions("habd");
+		ArrayList<Card> deck = new ArrayList<Card>();
+		
 	}
 }

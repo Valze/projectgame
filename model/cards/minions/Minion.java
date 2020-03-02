@@ -19,6 +19,48 @@ public class Minion extends Card {
 		this.taunt = taunt;
 		this.divine = divine;
 		this.sleeping = !charge;
-		this.attacked = !charge;
+		this.attacked = false;
+	}
+	public int getAttack() {
+		return this.attack;
+	}
+	public int getMaxHP() {
+		return this.maxHP;
+	}
+	public int getCurrentHP() {
+		return this.currentHP;
+	}
+	public boolean isTaunt() {
+		return this.taunt;
+	}
+	public boolean isDivine() {
+		return this.divine;
+	}
+	public boolean isSleeping() {
+		return this.sleeping;
+	}
+	public boolean isAttacked() {
+		return this.attacked;
+	}
+	public void setAttack(int attack) {
+		this.attack = attack;
+	}
+	public void setMaxHP(int maxHP) {
+		this.maxHP = maxHP;
+	}
+	public void setCurrentHP(int currentHP) {
+		this.currentHP = currentHP;
+	}
+	public void setTaunt(boolean taunt) {
+		this.taunt = taunt;
+	}
+	public void setDivine(boolean divine) {
+		this.divine = divine;
+	}
+	public void setSleeping(boolean sleeping) {
+		this.sleeping = sleeping;
+	}
+	public void setAttacked(boolean attacked) {
+		this.attacked = attacked;
 	}
 }
