@@ -1,0 +1,9 @@
+/FullFieldException.class
+/FullHandException.class
+/CannotAttackException.class
+/HeroPowerAlreadyUsedException.class
+/InvalidTargetException.class
+/NotEnoughManaException.class
+/NotSummonedException.class
+/NotYourTurnException.class
+/TauntBypassException.class
