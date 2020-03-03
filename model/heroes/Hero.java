@@ -17,8 +17,9 @@ public abstract class Hero {
 	private ArrayList<Minion> field;//READ ONLY
 	private ArrayList<Card> hand; // READ ONLY
 	private int fatigueDamage; //Neither READ nor WRITE
-	public Hero(String name) {
-		this.name = name; //will expand later
+	public Hero(String name) throws IOException{
+		this.name = name;
+		this.buildDeck();
 	}
 	public String getName() {
 		return this.name;
@@ -89,7 +90,7 @@ public abstract class Hero {
 	}
 	public final static ArrayList<Minion> getNeutralMinions(ArrayList<Minion> minions, int count) throws IOException{
 		int[] repeated = new int[minions.size()];
-		ArrayList<Minion> minionHand = null;
+		ArrayList<Minion> minionHand = new ArrayList<Minion>();
 		int random = 0;
 		for(int i = 0; i<count; i++) {
 			random =(int) (Math.random()*(minions.size()));
@@ -108,9 +109,20 @@ public abstract class Hero {
 		}
 		return minionHand;
 	}
-	public void buildDeck() throws IOException{
-		ArrayList<Minion> minions = getAllNeutralMinions("habd");
-		ArrayList<Card> deck = new ArrayList<Card>();
-		
+	public abstract void buildDeck() throws IOException;
+	public static void shuffle(ArrayList<Card> heroDeck) {
+		int random = (int)(Math.random()*heroDeck.size());
+		for(int shuffle = 0; shuffle<heroDeck.size(); shuffle++) {
+			Card swap = heroDeck.get(shuffle);
+			Card swap2 = heroDeck.get(random);
+			if(random!= shuffle) {
+				heroDeck.set(random, swap);
+				heroDeck.set(shuffle, swap2);
+			}
+			else {
+				shuffle--;
+				continue;
+			}
+		}
 	}
 }

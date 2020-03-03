@@ -4,7 +4,7 @@ import model.cards.*;
 
 public class FullHandException extends HearthstoneException {
 
-	Card burned;
+	private Card burned;
 	
 	FullHandException(Card b){
 		super();
