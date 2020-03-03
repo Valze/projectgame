@@ -22,7 +22,7 @@ public class Priest extends Hero {
 		for(int i = 0; i<priestSpells.length; i++) {
 			priestDeck.add(priestSpells[i]);
 		}
-		ArrayList<Minion> minions = getAllNeutralMinions("test_minion.csv");
+		ArrayList<Minion> minions = getAllNeutralMinions("neutral_minions.csv");
 		ArrayList<Minion> minionHand = getNeutralMinions(minions, 13);
 		for(int i = 0; i<minionHand.size(); i++) {
 			priestDeck.add(minionHand.get(i));

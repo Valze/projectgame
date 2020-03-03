@@ -20,7 +20,7 @@ public class Paladin extends Hero {
 		for(int i = 0; i<paladinSpells.length; i++) {
 			paladinDeck.add(paladinSpells[i]);
 		}
-		ArrayList<Minion> minions = getAllNeutralMinions("test_minion.csv");
+		ArrayList<Minion> minions = getAllNeutralMinions("neutral_minions.csv");
 		ArrayList<Minion> minionHand = getNeutralMinions(minions, 15);
 		for(int i = 0; i<minionHand.size(); i++) {
 			paladinDeck.add(minionHand.get(i));

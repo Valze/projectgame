@@ -14,13 +14,15 @@ public class Hunter extends Hero {
 	public void buildDeck() throws IOException {
 		ArrayList<Card> hunterDeck = new ArrayList<Card>();
 		ArrayList<Card> returnDeck = this.getDeck();
+		returnDeck = hunterDeck;
 		Spell kill = new KillCommand();
 		Spell multi = new MultiShot();
 		Spell[] hunterSpells = {kill, kill, multi, multi};
 		for(int i = 0; i<hunterSpells.length; i++) {
 			hunterDeck.add(hunterSpells[i]);
 		}
-		ArrayList<Minion> minions = getAllNeutralMinions("test_minion.csv");
+		ArrayList<Minion> minions = new ArrayList<Minion>();
+		minions = getAllNeutralMinions("neutral_minions.csv");
 		ArrayList<Minion> minionHand = getNeutralMinions(minions, 15);
 		for(int i = 0; i<minionHand.size(); i++) {
 			hunterDeck.add(minionHand.get(i));
@@ -28,6 +30,5 @@ public class Hunter extends Hero {
 		Minion kingKrush = new Minion("King Krush", 9, Rarity.LEGENDARY, 8, 8, false, false, true);
 		hunterDeck.add(kingKrush);
 		shuffle(hunterDeck);
-		returnDeck = hunterDeck;
 	}
 }

@@ -22,7 +22,7 @@ public class Warlock extends Hero {
 		for(int i = 0; i<warlockSpells.length; i++) {
 			warlockDeck.add(warlockSpells[i]);
 		}
-		ArrayList<Minion> minions = getAllNeutralMinions("test_minion.csv");
+		ArrayList<Minion> minions = getAllNeutralMinions("neutral_minions.csv");
 		ArrayList<Minion> minionHand = getNeutralMinions(minions, 13);
 		for(int i = 0; i<minionHand.size(); i++) {
 			warlockDeck.add(minionHand.get(i));

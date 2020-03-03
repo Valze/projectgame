@@ -22,7 +22,7 @@ public class Mage extends Hero {
 		for(int i = 0; i<mageSpells.length; i++) {
 			mageDeck.add(mageSpells[i]);
 		}
-		ArrayList<Minion> minions = getAllNeutralMinions("test_minion.csv");
+		ArrayList<Minion> minions = getAllNeutralMinions("neutral_minions.csv");
 		ArrayList<Minion> minionHand = getNeutralMinions(minions, 13);
 		for(int i = 0; i<minionHand.size(); i++) {
 			mageDeck.add(minionHand.get(i));
