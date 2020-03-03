@@ -12,9 +12,7 @@ public class Hunter extends Hero {
 		super("Rexxar");
 	}
 	public void buildDeck() throws IOException {
-		ArrayList<Card> hunterDeck = new ArrayList<Card>();
-		ArrayList<Card> returnDeck = this.getDeck();
-		returnDeck = hunterDeck;
+		ArrayList<Card> hunterDeck = this.getDeck();
 		Spell kill = new KillCommand();
 		Spell multi = new MultiShot();
 		Spell[] hunterSpells = {kill, kill, multi, multi};

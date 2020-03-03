@@ -19,6 +19,7 @@ public abstract class Hero {
 	private int fatigueDamage; //Neither READ nor WRITE
 	public Hero(String name) throws IOException{
 		this.name = name;
+		this.deck = new ArrayList<Card>();
 		this.buildDeck();
 	}
 	public String getName() {
