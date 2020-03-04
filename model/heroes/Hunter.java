@@ -19,8 +19,7 @@ public class Hunter extends Hero {
 		for(int i = 0; i<hunterSpells.length; i++) {
 			hunterDeck.add(hunterSpells[i]);
 		}
-		ArrayList<Minion> minions = new ArrayList<Minion>();
-		minions = getAllNeutralMinions("neutral_minions.csv");
+		ArrayList<Minion> minions = getAllNeutralMinions("neutral_minions.csv");
 		ArrayList<Minion> minionHand = getNeutralMinions(minions, 15);
 		for(int i = 0; i<minionHand.size(); i++) {
 			hunterDeck.add(minionHand.get(i));

@@ -15,7 +15,7 @@ public class Minion extends Card {
 		super(name, manaCost, rarity);
 		this.attack = attack;
 		this.maxHP = maxHP;
-		this.currentHP = maxHP;
+		setCurrentHP(maxHP);
 		this.taunt = taunt;
 		this.divine = divine;
 		this.sleeping = !charge;
@@ -43,12 +43,23 @@ public class Minion extends Card {
 		return this.attacked;
 	}
 	public void setAttack(int attack) {
+		if(attack<0) {
+			this.attack = 0;
+			return;
+		}
+		if(attack>10) {
+			this.attack = 10;
+			return;
+		}
 		this.attack = attack;
 	}
 	public void setMaxHP(int maxHP) {
 		this.maxHP = maxHP;
 	}
 	public void setCurrentHP(int currentHP) {
+		if(currentHP>this.maxHP) {
+			return;
+		}
 		this.currentHP = currentHP;
 	}
 	public void setTaunt(boolean taunt) {
