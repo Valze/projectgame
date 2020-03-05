@@ -125,7 +125,9 @@ public abstract class Hero {
 			else if(repeated[random]==2) {
 				continue;
 			}
-			Minion toadd = minions.get(random);
+			Minion buffer = minions.get(random);
+			Minion toadd = new Minion(buffer.getName(),buffer.getManaCost(), buffer.getRarity(),
+					buffer.getAttack(), buffer.getMaxHP(), buffer.isTaunt(), buffer.isDivine(), buffer.isSleeping());
 			minionHand.add(toadd);
 			if(toadd.getRarity()==Rarity.LEGENDARY) {
 				repeated[random] = 2;

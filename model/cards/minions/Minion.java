@@ -47,10 +47,7 @@ public class Minion extends Card {
 			this.attack = 0;
 			return;
 		}
-		if(attack>10) {
-			this.attack = 10;
-			return;
-		}
+		
 		this.attack = attack;
 	}
 	public void setMaxHP(int maxHP) {
