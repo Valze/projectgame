@@ -1,6 +1,5 @@
 package model.cards.spells;
 
-
 import model.cards.*;
 
 public class MultiShot extends Spell implements AOESpell {
