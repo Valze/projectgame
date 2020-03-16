@@ -23,6 +23,8 @@ public abstract class Hero {
 		this.heroPowerUsed = false;
 		this.currentManaCrystals = totalManaCrystals;
 		this.deck = new ArrayList<Card>();
+		this.field = new ArrayList<Minion>();
+		this.hand = new ArrayList<Card>();
 		this.buildDeck();
 	}
 	public String getName() {
