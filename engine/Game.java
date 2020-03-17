@@ -18,7 +18,8 @@ public class Game {
 		int r = (int) (Math.random()*6);
 		currentHero = (r%2 == 0)? p1 : p2;
 		opponent = (!(r%2 == 0))? p1 : p2;
-		currentHero.setCurrentManaCrystals(1); 
+		currentHero.setTotalManaCrystals(1);
+		currentHero.setCurrentManaCrystals(1);;
 	}
 
 	public Hero getCurrentHero() {
