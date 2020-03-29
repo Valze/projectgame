@@ -11,6 +11,8 @@ public class Minion extends Card {
 	private boolean divine;
 	private boolean sleeping;
 	private boolean attacked;
+	private MinionListener listener;
+	
 	public Minion(String name, int manaCost, Rarity rarity, int attack, int maxHP, boolean taunt, boolean divine, boolean charge) {
 		super(name, manaCost, rarity);
 		setAttack(attack);
@@ -70,5 +72,8 @@ public class Minion extends Card {
 	}
 	public void setAttacked(boolean attacked) {
 		this.attacked = attacked;
+	}
+	public void setListener(MinionListener listener) {
+		this.listener = listener;
 	}
 }

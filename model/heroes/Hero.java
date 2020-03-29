@@ -1,6 +1,9 @@
 package model.heroes;
 
 import java.util.ArrayList;
+
+import engine.ActionValidator;
+
 import java.io.*;
 import model.cards.Card;
 import model.cards.Rarity;
@@ -17,6 +20,8 @@ public abstract class Hero {
 	private ArrayList<Minion> field;//READ ONLY
 	private ArrayList<Card> hand; // READ ONLY
 	private int fatigueDamage; //Neither READ nor WRITE
+	private HeroListener listener;//READ and WRITE
+	private ActionValidator validator;//WRITE ONLY
 	public Hero(String name) throws IOException{
 		this.name = name;
 		setCurrentHP(30);
@@ -51,6 +56,10 @@ public abstract class Hero {
 	public ArrayList<Card> getHand(){
 		return this.hand;
 	}
+	public HeroListener getListener() {
+		return listener;
+	}
+	
 	public void setCurrentHP(int currentHP) {
 		if(currentHP>30) {
 			return;
@@ -74,6 +83,13 @@ public abstract class Hero {
 			return;
 		}
 		this.currentManaCrystals = currentManaCrystals;
+	}
+	public void setListener(HeroListener listener) {
+		this.listener = listener;
+	}
+	
+	public void setValidator(ActionValidator validator) {
+		this.validator = validator;
 	}
 	public final static ArrayList<Minion> getAllNeutralMinions(String filePath) throws IOException{
 		BufferedReader br = new BufferedReader(new FileReader(filePath));
