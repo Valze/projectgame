@@ -172,4 +172,7 @@ public abstract class Hero {
 			random = (int)(Math.random()*heroDeck.size());
 		}
 	}
+	public void heroDeath() {
+		
+	}
 }

@@ -1,11 +1,10 @@
 package model.cards;
 
-public abstract class Card {
+public abstract class Card implements Cloneable{
 	private String name;
 	private int manaCost;
 	private Rarity rarity;
 	public Card() {
-		
 		
 	}
 	public Card(String name, int manaCost, Rarity rarity) {
@@ -37,4 +36,6 @@ public abstract class Card {
 		}
 		
 	}
+	
 }
+

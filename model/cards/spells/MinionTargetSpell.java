@@ -4,6 +4,6 @@ import exceptions.InvalidTargetException;
 import model.cards.minions.Minion;
 
 public interface MinionTargetSpell{
-	public void preformAction(Minion m) throws InvalidTargetException;
-
+	public void performAction(Minion m) throws InvalidTargetException;
+	
 }

@@ -76,4 +76,7 @@ public class Minion extends Card {
 	public void setListener(MinionListener listener) {
 		this.listener = listener;
 	}
+	public void minionDeath() {
+		
+	}
 }
