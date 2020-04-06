@@ -3,16 +3,21 @@ package model.heroes;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import exceptions.FullFieldException;
+import exceptions.FullHandException;
+import exceptions.HeroPowerAlreadyUsedException;
+import exceptions.NotEnoughManaException;
+import exceptions.NotYourTurnException;
 import model.cards.Card;
 import model.cards.Rarity;
 import model.cards.minions.Minion;
 import model.cards.spells.*;
 
 public class Paladin extends Hero {
-	public Paladin() throws IOException {
+	public Paladin() throws IOException, CloneNotSupportedException {
 		super("Uther Lightbringer");
 	}
-	public void buildDeck() throws IOException {
+	public void buildDeck() throws IOException, CloneNotSupportedException {
 		ArrayList<Card> paladinDeck = this.getDeck();
 		Spell seal = new SealOfChampions();
 		Spell levelup = new LevelUp();
@@ -29,4 +34,10 @@ public class Paladin extends Hero {
 		paladinDeck.add(tirion);
 		shuffle(paladinDeck);
 	}
+	public void useHeroPower() throws NotEnoughManaException, HeroPowerAlreadyUsedException, NotYourTurnException, FullHandException, FullFieldException, CloneNotSupportedException {
+		super.useHeroPower();
+		Minion silver = new Minion("Silver Hand Recruit", 1, Rarity.BASIC, 1,1,false,false,false);
+		//this.playMinion(silver);
+	}
+	
 }

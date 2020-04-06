@@ -3,16 +3,21 @@ package model.heroes;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import exceptions.FullFieldException;
+import exceptions.FullHandException;
+import exceptions.HeroPowerAlreadyUsedException;
+import exceptions.NotEnoughManaException;
+import exceptions.NotYourTurnException;
 import model.cards.Card;
 import model.cards.Rarity;
 import model.cards.minions.Minion;
 import model.cards.spells.*;
 
 public class Priest extends Hero {
-	public Priest() throws IOException {
+	public Priest() throws IOException, CloneNotSupportedException {
 		super("Anduin Wrynn");
 	}
-	public void buildDeck() throws IOException {
+	public void buildDeck() throws IOException, CloneNotSupportedException {
 		ArrayList<Card> priestDeck = this.getDeck();
 		Spell divSpirit = new DivineSpirit();
 		Spell holyNova = new HolyNova();
@@ -30,5 +35,13 @@ public class Priest extends Hero {
 		Minion velen = new Minion("Prophet Velen", 7, Rarity.LEGENDARY, 7, 7, false, false, false);
 		priestDeck.add(velen);
 		shuffle(priestDeck);
+	}
+	public void useHeroPower(Hero target) throws NotEnoughManaException, HeroPowerAlreadyUsedException, NotYourTurnException, FullHandException, FullFieldException, CloneNotSupportedException {
+		super.useHeroPower();
+		target.setCurrentHP(target.getCurrentHP() + 2);
+	}
+	public void useHeroPower(Minion target) throws NotEnoughManaException, HeroPowerAlreadyUsedException, NotYourTurnException, FullHandException, FullFieldException, CloneNotSupportedException {
+		super.useHeroPower();
+		target.setCurrentHP(target.getCurrentHP() + 2);
 	}
 }

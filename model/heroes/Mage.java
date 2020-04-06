@@ -3,16 +3,21 @@ package model.heroes;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import exceptions.FullFieldException;
+import exceptions.FullHandException;
+import exceptions.HeroPowerAlreadyUsedException;
+import exceptions.NotEnoughManaException;
+import exceptions.NotYourTurnException;
 import model.cards.Card;
 import model.cards.Rarity;
 import model.cards.minions.Minion;
 import model.cards.spells.*;
 
 public class Mage extends Hero {
-	public Mage() throws IOException {
+	public Mage() throws IOException, CloneNotSupportedException {
 		super("Jaina Proudmoore");
 	}
-	public void buildDeck() throws IOException {
+	public void buildDeck() throws IOException, CloneNotSupportedException {
 		ArrayList<Card> mageDeck = this.getDeck();
 		Spell polymorph = new Polymorph();
 		Spell flamestrike = new Flamestrike();
@@ -30,5 +35,13 @@ public class Mage extends Hero {
 		Minion kalycgos = new Minion("Kalycgos", 10, Rarity.LEGENDARY, 4, 12, false, false, false);
 		mageDeck.add(kalycgos);
 		shuffle(mageDeck);
+	}
+	public void useHeroPower(Hero target) throws NotEnoughManaException, HeroPowerAlreadyUsedException, NotYourTurnException, FullHandException, FullFieldException, CloneNotSupportedException {
+		super.useHeroPower();
+		target.setCurrentHP(target.getCurrentHP() - 1);
+	}
+	public void useHeroPower(Minion target) throws NotEnoughManaException, HeroPowerAlreadyUsedException, NotYourTurnException, FullHandException, FullFieldException, CloneNotSupportedException {
+		super.useHeroPower();
+		target.setCurrentHP(target.getCurrentHP() - 1);
 	}
 }

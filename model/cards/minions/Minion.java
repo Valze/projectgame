@@ -1,7 +1,9 @@
 package model.cards.minions;
 
+import exceptions.InvalidTargetException;
 import model.cards.Card;
 import model.cards.Rarity;
+import model.heroes.Hero;
 
 public class Minion extends Card {
 	private int attack;
@@ -78,5 +80,34 @@ public class Minion extends Card {
 	}
 	public void minionDeath() {
 		
+	}
+	public void attack(Minion target) {
+		if(!this.isDivine() && !target.isDivine()) {
+			this.setCurrentHP(this.currentHP-target.attack);
+			target.setCurrentHP(target.currentHP-this.attack);
+		}
+		else if (this.isDivine() && target.isDivine()) {
+			this.setDivine(false);
+			target.setDivine(false);
+		}
+		else if (!this.isDivine()) {
+			target.setDivine(false);
+			this.setCurrentHP(this.currentHP-target.attack);
+		}
+		else if (!target.isDivine()) {
+			this.setDivine(false);
+			target.setCurrentHP(target.currentHP-this.attack);
+		}
+	}
+	public void attack(Hero target) throws InvalidTargetException {
+		if(this instanceof Icehowl) {
+			throw new InvalidTargetException("Icehowl cannot target heroes");
+		}
+		else {
+			target.setCurrentHP(target.getCurrentHP() - this.attack);
+		}
+	}
+	public Minion clone() throws CloneNotSupportedException {
+		return (Minion) super.clone();
 	}
 }

@@ -3,6 +3,11 @@ package model.heroes;
 import java.util.ArrayList;
 
 import engine.ActionValidator;
+import exceptions.FullFieldException;
+import exceptions.FullHandException;
+import exceptions.HeroPowerAlreadyUsedException;
+import exceptions.NotEnoughManaException;
+import exceptions.NotYourTurnException;
 
 import java.io.*;
 import model.cards.Card;
@@ -22,7 +27,7 @@ public abstract class Hero {
 	private int fatigueDamage; //Neither READ nor WRITE
 	private HeroListener listener;//READ and WRITE
 	private ActionValidator validator;//WRITE ONLY
-	public Hero(String name) throws IOException{
+	public Hero(String name) throws IOException, CloneNotSupportedException{
 		this.name = name;
 		setCurrentHP(30);
 		this.heroPowerUsed = false;
@@ -91,6 +96,12 @@ public abstract class Hero {
 	public void setValidator(ActionValidator validator) {
 		this.validator = validator;
 	}
+	public void useHeroPower() throws NotEnoughManaException,
+	HeroPowerAlreadyUsedException, NotYourTurnException, FullHandException,
+	FullFieldException, CloneNotSupportedException {
+		this.validator.validateUsingHeroPower(this);
+		this.validator.validateTurn(this);
+	}
 	public final static ArrayList<Minion> getAllNeutralMinions(String filePath) throws IOException{
 		BufferedReader br = new BufferedReader(new FileReader(filePath));
 		ArrayList<Minion> minions = new ArrayList<Minion>();
@@ -125,7 +136,7 @@ public abstract class Hero {
 		br.close();
 		return minions;
 	}
-	public final static ArrayList<Minion> getNeutralMinions(ArrayList<Minion> minions, int count) throws IOException{
+	public final static ArrayList<Minion> getNeutralMinions(ArrayList<Minion> minions, int count) throws IOException, CloneNotSupportedException{
 		int[] repeated = new int[minions.size()];
 		ArrayList<Minion> minionHand = new ArrayList<Minion>();
 		int random = 0;
@@ -144,8 +155,7 @@ public abstract class Hero {
 				continue;
 			}
 			Minion buffer = minions.get(random);
-			Minion toadd = new Minion(buffer.getName(),buffer.getManaCost(), buffer.getRarity(),
-					buffer.getAttack(), buffer.getMaxHP(), buffer.isTaunt(), buffer.isDivine(), buffer.isSleeping());
+			Minion toadd = buffer.clone();
 			minionHand.add(toadd);
 			if(toadd.getRarity()==Rarity.LEGENDARY) {
 				repeated[random] = 2;
@@ -156,7 +166,7 @@ public abstract class Hero {
 		}
 		return minionHand;
 	}
-	public abstract void buildDeck() throws IOException;
+	public abstract void buildDeck() throws IOException, CloneNotSupportedException;
 	public static void shuffle(ArrayList<Card> heroDeck) {
 		int random = (int)(Math.random()*heroDeck.size());
 		for(int shuffle = 0; shuffle<heroDeck.size(); shuffle++) {

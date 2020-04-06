@@ -3,16 +3,21 @@ package model.heroes;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import exceptions.FullFieldException;
+import exceptions.FullHandException;
+import exceptions.HeroPowerAlreadyUsedException;
+import exceptions.NotEnoughManaException;
+import exceptions.NotYourTurnException;
 import model.cards.Card;
 import model.cards.Rarity;
 import model.cards.minions.Minion;
 import model.cards.spells.*;
 
 public class Warlock extends Hero {
-	public Warlock() throws IOException {
+	public Warlock() throws IOException, CloneNotSupportedException {
 		super("Gul'dan");
 	}
-	public void buildDeck() throws IOException{
+	public void buildDeck() throws IOException, CloneNotSupportedException{
 		ArrayList<Card> warlockDeck = this.getDeck();
 		Spell curse = new CurseOfWeakness();
 		Spell soul = new SiphonSoul();
@@ -30,5 +35,10 @@ public class Warlock extends Hero {
 		Minion wilfred = new Minion("Wilfred Fizzlebang", 6, Rarity.LEGENDARY, 4, 4, false, false, false);
 		warlockDeck.add(wilfred);
 		shuffle(warlockDeck);
+	}
+	public void useHeroPower() throws NotEnoughManaException, HeroPowerAlreadyUsedException, NotYourTurnException, FullHandException, FullFieldException, CloneNotSupportedException {
+		super.useHeroPower();
+		//this.drawCard();
+		this.setCurrentHP(this.getCurrentHP() - 2);
 	}
 }
