@@ -5,3 +5,7 @@ test_minion.csv
 
 *.class
 >>>>>>> master
+
+bin/
+
+.classpath
