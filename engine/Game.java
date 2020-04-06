@@ -2,6 +2,7 @@ package engine;
 
 import exceptions.CannotAttackException;
 import exceptions.FullFieldException;
+import exceptions.FullHandException;
 import exceptions.InvalidTargetException;
 import exceptions.NotEnoughManaException;
 import exceptions.NotSummonedException;
@@ -63,5 +64,10 @@ public class Game implements ActionValidator {
 	public void validateUsingHeroPower(Hero hero) throws NotEnoughManaException{
 		
 	}
-	
+	public void damageOpponent(int amount) {
+		
+	}
+    public void endTurn() throws FullHandException,CloneNotSupportedException{
+		
+	}
 }
