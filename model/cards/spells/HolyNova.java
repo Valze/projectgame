@@ -14,6 +14,10 @@ public class HolyNova extends Spell implements AOESpell {
 	public void performAction(ArrayList<Minion> oppField , ArrayList<Minion> curField){
 		ArrayList<Integer> Dead = new ArrayList<Integer>();
 		for(Minion i : oppField) {
+			if(i.isDivine()==true) {
+				i.setDivine(false);
+			}
+			else {
 			i.setCurrentHP(i.getCurrentHP()-4);
 			if(i.getCurrentHP()<=0) {
 				Dead.add(oppField.indexOf(i));
@@ -22,6 +26,7 @@ public class HolyNova extends Spell implements AOESpell {
 				j.setCurrentHP(j.getCurrentHP()+2);
 			}
 		}
+	}
 		for(Integer i : Dead) {
 			oppField.get(i).minionDeath();
 			

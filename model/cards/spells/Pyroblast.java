@@ -16,9 +16,14 @@ public class Pyroblast extends Spell implements HeroTargetSpell, MinionTargetSpe
 		}
 	}
 	public void performAction(Minion m) {
+		if(m.isDivine() == true) {
+			m.setDivine(false);
+		}
+		else {
 		m.setCurrentHP(m.getCurrentHP()-10);
 		if(m.getCurrentHP()<=0) {
 			m.minionDeath();
+		}
 		}
 	}
 }
