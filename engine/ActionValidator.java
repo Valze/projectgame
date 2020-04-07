@@ -2,6 +2,7 @@ package engine;
 
 import exceptions.CannotAttackException;
 import exceptions.FullFieldException;
+import exceptions.HeroPowerAlreadyUsedException;
 import exceptions.InvalidTargetException;
 import exceptions.NotEnoughManaException;
 import exceptions.NotSummonedException;
@@ -17,6 +18,6 @@ public interface ActionValidator {
 	public void validateAttack(Minion attacker,Hero target) throws CannotAttackException,NotSummonedException,TauntBypassException,InvalidTargetException;
 	public void validateManaCost(Card card) throws NotEnoughManaException;
 	public void validatePlayingMinion(Minion minion) throws FullFieldException;
-	public void validateUsingHeroPower(Hero hero) throws NotEnoughManaException;
+	public void validateUsingHeroPower(Hero hero) throws NotEnoughManaException, HeroPowerAlreadyUsedException;
 	
 }

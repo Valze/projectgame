@@ -3,19 +3,29 @@ package model.heroes;
 import java.util.ArrayList;
 
 import engine.ActionValidator;
+import exceptions.CannotAttackException;
 import exceptions.FullFieldException;
 import exceptions.FullHandException;
 import exceptions.HeroPowerAlreadyUsedException;
+import exceptions.InvalidTargetException;
 import exceptions.NotEnoughManaException;
+import exceptions.NotSummonedException;
 import exceptions.NotYourTurnException;
+import exceptions.TauntBypassException;
 
 import java.io.*;
 import model.cards.Card;
 import model.cards.Rarity;
 import model.cards.minions.Icehowl;
 import model.cards.minions.Minion;
+import model.cards.minions.MinionListener;
+import model.cards.spells.AOESpell;
+import model.cards.spells.FieldSpell;
+import model.cards.spells.HeroTargetSpell;
+import model.cards.spells.LeechingSpell;
+import model.cards.spells.MinionTargetSpell;
 
-public abstract class Hero {
+public abstract class Hero implements MinionListener{
 	private String name; //READ ONLY.
 	private int currentHP;//default is 30, can never be higher
 	private boolean heroPowerUsed;
@@ -35,6 +45,7 @@ public abstract class Hero {
 		this.deck = new ArrayList<Card>();
 		this.field = new ArrayList<Minion>();
 		this.hand = new ArrayList<Card>();
+		this.fatigueDamage = 0;
 		this.buildDeck();
 	}
 	public String getName() {
@@ -101,6 +112,90 @@ public abstract class Hero {
 	FullFieldException, CloneNotSupportedException {
 		this.validator.validateUsingHeroPower(this);
 		this.validator.validateTurn(this);
+	}
+	public void playMinion(Minion m) throws NotYourTurnException, NotEnoughManaException, FullFieldException{
+		this.validator.validateTurn(this);
+		this.validator.validateManaCost(m);
+		try{
+			
+		if(this.field.size()==7) {
+			throw new FullFieldException();
+		}
+		this.hand.remove(m);
+		this.field.add(m);
+		m.setListener(this);
+		}
+		catch(FullFieldException full) {
+			
+		}
+	}
+	public void attackWithMinion(Minion attacker, Minion target) throws
+	CannotAttackException, NotYourTurnException, TauntBypassException,
+	InvalidTargetException, NotSummonedException{
+		this.validator.validateTurn(this);
+		this.validator.validateAttack(attacker, target);
+		attacker.attack(target);
+	}
+	public void attackWithMinion(Minion attacker, Hero target) throws
+	CannotAttackException, NotYourTurnException, TauntBypassException,
+	InvalidTargetException, NotSummonedException{
+		this.validator.validateTurn(this);
+		this.validator.validateAttack(attacker, target);
+		attacker.attack(target);
+	}
+	public void castSpell(FieldSpell s) throws NotYourTurnException,
+	NotEnoughManaException{
+		this.validator.validateTurn(this);
+		this.validator.validateManaCost((Card) s);
+		s.performAction(this.field);
+		this.hand.remove((Card)s);
+	}
+	public void castSpell(AOESpell s, ArrayList<Minion> oppField) throws
+	NotYourTurnException, NotEnoughManaException{
+		this.validator.validateTurn(this);
+		this.validator.validateManaCost((Card) s);
+		s.performAction(oppField, this.field);
+		this.hand.remove((Card)s);
+	}
+	public void castSpell(MinionTargetSpell s, Minion m) throws NotYourTurnException,
+	NotEnoughManaException, InvalidTargetException{
+		this.validator.validateTurn(this);
+		this.validator.validateManaCost((Card)s);
+		s.performAction(m);
+		this.hand.remove((Card)s);
+	}
+	public void castSpell(HeroTargetSpell s, Hero h) throws NotYourTurnException,
+	NotEnoughManaException{
+		this.validator.validateTurn(this);
+		this.validator.validateManaCost((Card)s);
+		s.performAction(h);
+		this.hand.remove((Card)s);
+	}
+	public void castSpell(LeechingSpell s, Minion m) throws NotYourTurnException,
+	NotEnoughManaException{
+		this.validator.validateTurn(this);
+		this.validator.validateManaCost((Card)s);
+		s.performAction(m);
+		this.hand.remove((Card)s);
+	}
+	public void drawCard() throws FullHandException, CloneNotSupportedException{
+		if(this.deck.size()==0) {
+			this.fatigueDamage = this.fatigueDamage + 1;
+			this.setCurrentHP(this.currentHP-this.fatigueDamage);
+			return;
+		}
+		Card drawn = this.deck.get(0);
+		if(this.hand.size()==10) {
+			throw new FullHandException("You have a full hand", drawn);
+		}
+		this.hand.add(drawn.clone());
+		this.deck.remove(drawn);
+	}
+	public void endTurn() throws FullHandException, CloneNotSupportedException{
+		this.drawCard();
+	}
+	public void onMinionDeath(Minion m) {
+		this.field.remove(m);
 	}
 	public final static ArrayList<Minion> getAllNeutralMinions(String filePath) throws IOException{
 		BufferedReader br = new BufferedReader(new FileReader(filePath));

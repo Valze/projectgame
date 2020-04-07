@@ -38,7 +38,7 @@ public class Warlock extends Hero {
 	}
 	public void useHeroPower() throws NotEnoughManaException, HeroPowerAlreadyUsedException, NotYourTurnException, FullHandException, FullFieldException, CloneNotSupportedException {
 		super.useHeroPower();
-		//this.drawCard();
+		this.drawCard();
 		this.setCurrentHP(this.getCurrentHP() - 2);
 	}
 }
