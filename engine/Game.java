@@ -13,7 +13,7 @@ import model.cards.Card;
 import model.cards.minions.Minion;
 import model.heroes.*;
 
-public class Game implements ActionValidator {
+public class Game implements ActionValidator , HeroListener {
 
 	private Hero firstHero;
 	private Hero secondHero;
@@ -120,11 +120,36 @@ public class Game implements ActionValidator {
 		else if(hero.getCurrentManaCrystals()<2) {
 			throw new NotEnoughManaException("Not enough mana");
 		}
+	
+	}
+	public void onHeroDeath() {
+		
 	}
 	public void damageOpponent(int amount) {
-		
+		opponent.setCurrentHP(opponent.getCurrentHP() - amount);
 	}
     public void endTurn() throws FullHandException,CloneNotSupportedException{
-		
+		Hero newHero;
+		newHero = currentHero;
+		currentHero = opponent;
+		opponent = newHero;
+    	
+    	if(currentHero.getTotalManaCrystals()>=10) {
+			currentHero.setCurrentManaCrystals(currentHero.getTotalManaCrystals());
+			opponent.setCurrentManaCrystals(opponent.getTotalManaCrystals());
+		}
+		else {
+			currentHero.setTotalManaCrystals(currentHero.getTotalManaCrystals()+1);
+			opponent.setTotalManaCrystals(opponent.getTotalManaCrystals()+1);
+			currentHero.setCurrentManaCrystals(currentHero.getTotalManaCrystals());
+			opponent.setCurrentManaCrystals(opponent.getTotalManaCrystals());
+		}
+		currentHero.setHeroPowerUsed(false);
+		opponent.setHeroPowerUsed(false);
+		for(Minion i : currentHero.getField()) {
+			i.setAttacked(false);
+			i.setSleeping(false);
+		}
+		currentHero.drawCard();
 	}
 }

@@ -193,9 +193,13 @@ public abstract class Hero implements MinionListener{
 	}
 	public void endTurn() throws FullHandException, CloneNotSupportedException{
 		this.drawCard();
+		listener.endTurn();
 	}
 	public void onMinionDeath(Minion m) {
 		this.field.remove(m);
+	}
+    public void heroDeath() {
+		
 	}
 	public final static ArrayList<Minion> getAllNeutralMinions(String filePath) throws IOException{
 		BufferedReader br = new BufferedReader(new FileReader(filePath));
@@ -276,8 +280,5 @@ public abstract class Hero implements MinionListener{
 			}
 			random = (int)(Math.random()*heroDeck.size());
 		}
-	}
-	public void heroDeath() {
-		
 	}
 }
