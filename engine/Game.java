@@ -73,8 +73,11 @@ public class Game implements ActionValidator {
 		}
 		else {
 			for(Minion i :opponent.getField()){
-				if(i.isTaunt()==true) {
-					throw new TauntBypassException();
+				if(i.isTaunt() == target.isTaunt()) {
+					attacker.attack(target);
+				}
+				else if(i.isTaunt()==true) {
+					throw new TauntBypassException("Taunt minion on field");
 				}
 			}
 		}
@@ -95,7 +98,7 @@ public class Game implements ActionValidator {
 		else {
 			for(Minion i :opponent.getField()){
 				if(i.isTaunt()==true) {
-					throw new TauntBypassException();
+					throw new TauntBypassException("Taunt minion on field");
 				}
 			}
 		}
