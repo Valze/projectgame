@@ -68,6 +68,16 @@ public class Game implements ActionValidator {
 		else if(!opponent.getField().contains(target)) {
 			throw new NotSummonedException("Target not summoned");
 		}
+		else if(attacker.isAttacked()==true) {
+			throw new CannotAttackException("Minion already attacked");
+		}
+		else {
+			for(Minion i :opponent.getField()){
+				if(i.isTaunt()==true) {
+					throw new TauntBypassException();
+				}
+			}
+		}
 	}
 	public void validateAttack(Minion attacker,Hero target) throws CannotAttackException,NotSummonedException,TauntBypassException,InvalidTargetException{
 		if(attacker.isSleeping() == true) {
@@ -75,6 +85,19 @@ public class Game implements ActionValidator {
 		}
 		else if(!currentHero.getField().contains(attacker)) {
 			throw new NotSummonedException("Minion is in hand");
+		}
+		else if(attacker.isAttacked()==true) {
+			throw new CannotAttackException("Minion already attacked");
+		}
+		else if(currentHero == target) {
+			throw new CannotAttackException("Cannot attack own hero");
+		}
+		else {
+			for(Minion i :opponent.getField()){
+				if(i.isTaunt()==true) {
+					throw new TauntBypassException();
+				}
+			}
 		}
 	}
 	public void validateManaCost(Card card) throws NotEnoughManaException{
@@ -90,6 +113,9 @@ public class Game implements ActionValidator {
 	public void validateUsingHeroPower(Hero hero) throws NotEnoughManaException, HeroPowerAlreadyUsedException{
 		if(hero.isHeroPowerUsed() == true) {
 			throw new HeroPowerAlreadyUsedException("Hero power already used");
+		}
+		else if(hero.getCurrentManaCrystals()<2) {
+			throw new NotEnoughManaException("Not enough mana");
 		}
 	}
 	public void damageOpponent(int amount) {
