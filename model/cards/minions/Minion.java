@@ -62,6 +62,7 @@ public class Minion extends Card {
 			return;
 		}
 		this.currentHP = currentHP;
+		//if(currentHP<=0) this.minionDeath();
 	}
 	public void setTaunt(boolean taunt) {
 		this.taunt = taunt;
@@ -79,7 +80,7 @@ public class Minion extends Card {
 		this.listener = listener;
 	}
 	public void minionDeath() {
-		
+		listener.onMinionDeath(this);
 	}
 	public void attack(Minion target) {
 		if(!this.isDivine() && !target.isDivine()) {
@@ -87,7 +88,7 @@ public class Minion extends Card {
 			target.setCurrentHP(target.currentHP-this.attack);
 		}
 		else if (this.isDivine() && target.isDivine()) {
-			this.setDivine(false);
+			this.setDivine(false);  //---> Minion loses Divine Shield only when attacked.
 			target.setDivine(false);
 		}
 		else if (!this.isDivine()) {
@@ -105,6 +106,7 @@ public class Minion extends Card {
 		}
 		else {
 			target.setCurrentHP(target.getCurrentHP() - this.attack);
+			attacked = !attacked;
 		}
 	}
 	public Minion clone() throws CloneNotSupportedException {

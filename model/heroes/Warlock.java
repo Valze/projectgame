@@ -25,15 +25,18 @@ public class Warlock extends Hero {
 		Spell[] warlockSpells = {curse, curse, soul, 
 				soul, nether, nether};
 		for(int i = 0; i<warlockSpells.length; i++) {
-			warlockDeck.add(warlockSpells[i]);
+			warlockDeck.add(warlockSpells[i].clone());
 		}
 		ArrayList<Minion> minions = getAllNeutralMinions("neutral_minions.csv");
 		ArrayList<Minion> minionHand = getNeutralMinions(minions, 13);
 		for(int i = 0; i<minionHand.size(); i++) {
-			warlockDeck.add(minionHand.get(i));
+			Minion temp = minionHand.get(i);
+			temp.setListener(this);
+			warlockDeck.add(temp.clone());
 		}
 		Minion wilfred = new Minion("Wilfred Fizzlebang", 6, Rarity.LEGENDARY, 4, 4, false, false, false);
-		warlockDeck.add(wilfred);
+		wilfred.setListener(this);
+		warlockDeck.add(wilfred.clone());
 		shuffle(warlockDeck);
 	}
 	public void useHeroPower() throws NotEnoughManaException, HeroPowerAlreadyUsedException, NotYourTurnException, FullHandException, FullFieldException, CloneNotSupportedException {

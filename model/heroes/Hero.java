@@ -24,6 +24,7 @@ import model.cards.spells.FieldSpell;
 import model.cards.spells.HeroTargetSpell;
 import model.cards.spells.LeechingSpell;
 import model.cards.spells.MinionTargetSpell;
+import model.cards.spells.*;
 
 public abstract class Hero implements MinionListener{
 	private String name; //READ ONLY.
@@ -112,6 +113,8 @@ public abstract class Hero implements MinionListener{
 	FullFieldException, CloneNotSupportedException {
 		this.validator.validateUsingHeroPower(this);
 		this.validator.validateTurn(this);
+		this.setCurrentManaCrystals(this.currentManaCrystals - 2);
+		this.setHeroPowerUsed(true);
 	}
 	public void playMinion(Minion m) throws NotYourTurnException, NotEnoughManaException, FullFieldException{
 		this.validator.validateTurn(this);
@@ -123,7 +126,7 @@ public abstract class Hero implements MinionListener{
 		}
 		this.hand.remove(m);
 		this.field.add(m);
-		m.setListener(this);
+		//m.setListener(this);      ----> Hero set as Minion Listener when building deck.
 		}
 		catch(FullFieldException full) {
 			
@@ -149,6 +152,7 @@ public abstract class Hero implements MinionListener{
 		this.validator.validateManaCost((Card) s);
 		s.performAction(this.field);
 		this.hand.remove((Card)s);
+		this.setCurrentManaCrystals(this.currentManaCrystals - 2);
 	}
 	public void castSpell(AOESpell s, ArrayList<Minion> oppField) throws
 	NotYourTurnException, NotEnoughManaException{
@@ -156,6 +160,17 @@ public abstract class Hero implements MinionListener{
 		this.validator.validateManaCost((Card) s);
 		s.performAction(oppField, this.field);
 		this.hand.remove((Card)s);
+		
+		if(s instanceof CurseOfWeakness)
+			this.setCurrentManaCrystals(this.currentManaCrystals - 2);
+		if(s instanceof Flamestrike)
+			this.setCurrentManaCrystals(this.currentManaCrystals - 7);
+		if(s instanceof HolyNova)
+			this.setCurrentManaCrystals(this.currentManaCrystals - 5);
+		if(s instanceof MultiShot)
+			this.setCurrentManaCrystals(this.currentManaCrystals - 4);
+		if(s instanceof TwistingNether)
+			this.setCurrentManaCrystals(this.currentManaCrystals - 8);
 	}
 	public void castSpell(MinionTargetSpell s, Minion m) throws NotYourTurnException,
 	NotEnoughManaException, InvalidTargetException{
@@ -163,6 +178,14 @@ public abstract class Hero implements MinionListener{
 		this.validator.validateManaCost((Card)s);
 		s.performAction(m);
 		this.hand.remove((Card)s);
+		
+		if(s instanceof Polymorph)
+			this.setCurrentManaCrystals(this.currentManaCrystals - 4);
+		else
+			if(s instanceof Pyroblast)
+				this.setCurrentManaCrystals(this.currentManaCrystals - 10);
+			else
+				this.setCurrentManaCrystals(this.currentManaCrystals - 3);		
 	}
 	public void castSpell(HeroTargetSpell s, Hero h) throws NotYourTurnException,
 	NotEnoughManaException{
@@ -170,18 +193,26 @@ public abstract class Hero implements MinionListener{
 		this.validator.validateManaCost((Card)s);
 		s.performAction(h);
 		this.hand.remove((Card)s);
+		
+		if(s instanceof Pyroblast)
+			this.setCurrentManaCrystals(this.currentManaCrystals - 10);
+		if(s instanceof KillCommand)
+			this.setCurrentManaCrystals(this.currentManaCrystals - 3);
 	}
 	public void castSpell(LeechingSpell s, Minion m) throws NotYourTurnException,
 	NotEnoughManaException{
 		this.validator.validateTurn(this);
 		this.validator.validateManaCost((Card)s);
-		s.performAction(m);
+		int h = s.performAction(m);
+		this.setCurrentHP(this.getCurrentHP() + h);
 		this.hand.remove((Card)s);
+		
+		this.setCurrentManaCrystals(this.currentManaCrystals - 6);
 	}
 	public void drawCard() throws FullHandException, CloneNotSupportedException{
 		if(this.deck.size()==0) {
-			this.fatigueDamage = this.fatigueDamage + 1;
 			this.setCurrentHP(this.currentHP-this.fatigueDamage);
+			this.fatigueDamage = this.fatigueDamage + 1;
 			return;
 		}
 		Card drawn = this.deck.get(0);
@@ -190,6 +221,9 @@ public abstract class Hero implements MinionListener{
 		}
 		this.hand.add(drawn.clone());
 		this.deck.remove(drawn);
+		if(this.deck.size()==0) {
+			this.fatigueDamage = 1;
+		}
 	}
 	public void endTurn() throws FullHandException, CloneNotSupportedException{
 		this.drawCard();
@@ -199,7 +233,7 @@ public abstract class Hero implements MinionListener{
 		this.field.remove(m);
 	}
     public void heroDeath() {
-		
+		listener.onHeroDeath();
 	}
 	public final static ArrayList<Minion> getAllNeutralMinions(String filePath) throws IOException{
 		BufferedReader br = new BufferedReader(new FileReader(filePath));

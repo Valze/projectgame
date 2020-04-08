@@ -23,15 +23,18 @@ public class Paladin extends Hero {
 		Spell levelup = new LevelUp();
 		Spell[] paladinSpells = {seal, seal, levelup, levelup};
 		for(int i = 0; i<paladinSpells.length; i++) {
-			paladinDeck.add(paladinSpells[i]);
+			paladinDeck.add(paladinSpells[i].clone());
 		}
 		ArrayList<Minion> minions = getAllNeutralMinions("neutral_minions.csv");
 		ArrayList<Minion> minionHand = getNeutralMinions(minions, 15);
 		for(int i = 0; i<minionHand.size(); i++) {
-			paladinDeck.add(minionHand.get(i));
+			 Minion temp = minionHand.get(i);
+			 temp.setListener(this);
+			 paladinDeck.add(temp.clone());
 		}
 		Minion tirion = new Minion("Tirion Fordring", 4, Rarity.LEGENDARY, 6, 6, true, true, false);
-		paladinDeck.add(tirion);
+		tirion.setListener(this);
+		paladinDeck.add(tirion.clone());
 		shuffle(paladinDeck);
 	}
 	public void useHeroPower() throws NotEnoughManaException, HeroPowerAlreadyUsedException, NotYourTurnException, FullHandException, FullFieldException, CloneNotSupportedException {

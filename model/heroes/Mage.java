@@ -25,20 +25,25 @@ public class Mage extends Hero {
 		Spell[] mageSpells = {polymorph, polymorph, flamestrike,
 				flamestrike, pyroblast, pyroblast};
 		for(int i = 0; i<mageSpells.length; i++) {
-			mageDeck.add(mageSpells[i]);
+			mageDeck.add(mageSpells[i].clone());
 		}
 		ArrayList<Minion> minions = getAllNeutralMinions("neutral_minions.csv");
 		ArrayList<Minion> minionHand = getNeutralMinions(minions, 13);
 		for(int i = 0; i<minionHand.size(); i++) {
-			mageDeck.add(minionHand.get(i));
+			Minion temp = minionHand.get(i);
+			temp.setListener(this);
+			mageDeck.add(temp.clone());
+		
 		}
 		Minion kalycgos = new Minion("Kalycgos", 10, Rarity.LEGENDARY, 4, 12, false, false, false);
-		mageDeck.add(kalycgos);
+		kalycgos.setListener(this);
+		mageDeck.add(kalycgos.clone());
 		shuffle(mageDeck);
 	}
 	public void useHeroPower(Hero target) throws NotEnoughManaException, HeroPowerAlreadyUsedException, NotYourTurnException, FullHandException, FullFieldException, CloneNotSupportedException {
 		super.useHeroPower();
 		target.setCurrentHP(target.getCurrentHP() - 1);
+		
 	}
 	public void useHeroPower(Minion target) throws NotEnoughManaException, HeroPowerAlreadyUsedException, NotYourTurnException, FullHandException, FullFieldException, CloneNotSupportedException {
 		super.useHeroPower();

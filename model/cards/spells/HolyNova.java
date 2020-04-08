@@ -18,18 +18,17 @@ public class HolyNova extends Spell implements AOESpell {
 				i.setDivine(false);
 			}
 			else {
-			i.setCurrentHP(i.getCurrentHP()-4);
-			if(i.getCurrentHP()<=0) {
-				Dead.add(oppField.indexOf(i));
-			}
-			for(Minion j: curField) {
-				j.setCurrentHP(j.getCurrentHP()+2);
+				i.setCurrentHP(i.getCurrentHP()-2);
+				if(i.getCurrentHP()<=0) 
+					Dead.add(oppField.indexOf(i));
 			}
 		}
-	}
+		
+		for(Minion j: curField) 
+			j.setCurrentHP(j.getCurrentHP()+2);
+	
 		for(Integer i : Dead) {
-			oppField.get(i).minionDeath();
-			
+			oppField.get(i).minionDeath();	
 		}
 	}
 }
