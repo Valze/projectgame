@@ -132,6 +132,7 @@ public class Game implements ActionValidator , HeroListener {
 	
 	}
 	public void onHeroDeath() {
+		this.listener.onGameOver();
 		
 	}
 	public void damageOpponent(int amount) {

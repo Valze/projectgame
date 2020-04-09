@@ -11,11 +11,19 @@ public class TwistingNether extends Spell implements AOESpell {
 		super("Twisting Nether", 8, Rarity.EPIC);
 	}
 	public void performAction(ArrayList<Minion> oppField , ArrayList<Minion> curField) {
-		for(Minion i : oppField) {
-			i.minionDeath();
+		ArrayList<Minion> Dead = new ArrayList<Minion>();
+		for(int i = 0; i<oppField.size()+curField.size();i++) {
+			if(i<oppField.size()) {
+				Dead.add(oppField.get(i));
+			}
+			if(i<curField.size()) {
+				Dead.add(curField.get(i));
+			}
 		}
-		for(Minion j : curField) {
-			j.minionDeath();
+		curField.clear();
+		oppField.clear();
+		for(Minion m: Dead) {
+			m.minionDeath();
 		}
 	}
 }
