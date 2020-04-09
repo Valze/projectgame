@@ -62,7 +62,7 @@ public class Minion extends Card {
 			return;
 		}
 		this.currentHP = currentHP;
-		//if(currentHP<=0) this.minionDeath();
+		if(currentHP<=0) this.minionDeath();
 	}
 	public void setTaunt(boolean taunt) {
 		this.taunt = taunt;
@@ -82,21 +82,37 @@ public class Minion extends Card {
 	public void minionDeath() {
 		listener.onMinionDeath(this);
 	}
+	public boolean pop(Minion target) {
+		if(this.attack !=0) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
 	public void attack(Minion target) {
 		if(!this.isDivine() && !target.isDivine()) {
 			this.setCurrentHP(this.currentHP-target.attack);
 			target.setCurrentHP(target.currentHP-this.attack);
 		}
 		else if (this.isDivine() && target.isDivine()) {
-			this.setDivine(false);  //---> Minion loses Divine Shield only when attacked.
-			target.setDivine(false);
+			if(this.pop(target)) {
+				target.setDivine(false);
+			}//---> Minion loses Divine Shield only when attacked.
+			if(target.pop(this)) {
+				this.setDivine(false);
+			}
 		}
 		else if (!this.isDivine()) {
-			target.setDivine(false);
+			if(this.pop(target)) {
+				target.setDivine(false);
+			}
 			this.setCurrentHP(this.currentHP-target.attack);
 		}
 		else if (!target.isDivine()) {
-			this.setDivine(false);
+			if(target.pop(this)) {
+				this.setDivine(false);
+			}
 			target.setCurrentHP(target.currentHP-this.attack);
 		}
 	}

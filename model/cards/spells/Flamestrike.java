@@ -11,21 +11,21 @@ public class Flamestrike extends Spell implements AOESpell {
 		super("Flamestrike", 7, Rarity.BASIC);
 	}
 	public void performAction(ArrayList<Minion> oppField , ArrayList<Minion> curField){
-		ArrayList<Integer> Dead = new ArrayList<Integer>();
+		ArrayList<Minion> Dead = new ArrayList<Minion>();
 		for(Minion i : oppField) {
-			if(i.isDivine()==true) {
-				i.setDivine(false);
+			if(this.canHit(i)) {
+				if(i.getCurrentHP()-4<=0) {
+					Dead.add(i);
+				}
+				else {
+					i.setCurrentHP(i.getCurrentHP()-4);
+				}
 			}
-			else {
-			i.setCurrentHP(i.getCurrentHP()-4);
-			if(i.getCurrentHP()<=0) {
-				Dead.add(oppField.indexOf(i));
-			}
-		}
 	}
-		for(Integer i : Dead) {
-			oppField.get(i).minionDeath();
-			
+		for(Minion m: Dead) {
+			oppField.remove(m);
+			m.setCurrentHP(m.getCurrentHP()-4);
 		}
+		
 	}
 }
