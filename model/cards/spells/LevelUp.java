@@ -12,10 +12,10 @@ public class LevelUp extends Spell implements FieldSpell {
 	}
 	public void performAction(ArrayList<Minion>field) {
 		for(Minion i : field) {
-			if(i.getName()=="Silver Hand Recruit") {
+			if(i.getName().equals("Silver Hand Recruit")) {
 				i.setAttack(i.getAttack()+1);
-				i.setCurrentHP(i.getCurrentHP()+1);
 				i.setMaxHP(i.getMaxHP()+1);
+				i.setCurrentHP(i.getCurrentHP()+1);
 			}
 		}
 	}
