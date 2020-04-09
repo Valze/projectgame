@@ -40,7 +40,7 @@ public abstract class Hero implements MinionListener{
 	private ActionValidator validator;//WRITE ONLY
 	public Hero(String name) throws IOException, CloneNotSupportedException{
 		this.name = name;
-		setCurrentHP(30);
+		this.currentHP = 30;
 		this.heroPowerUsed = false;
 		this.currentManaCrystals = totalManaCrystals;
 		this.deck = new ArrayList<Card>();
@@ -78,9 +78,6 @@ public abstract class Hero implements MinionListener{
 	}
 	
 	public void setCurrentHP(int currentHP) {
-		if(currentHP>30) {
-			return;
-		}
 		if(currentHP<=0) {
 			this.heroDeath();
 			return;
@@ -148,7 +145,14 @@ public abstract class Hero implements MinionListener{
 		this.validator.validateTurn(this);
 		this.validator.validateManaCost((Card) s);
 		s.performAction(this.field);
-		this.hand.remove((Card)s);
+		this.hand.remove((Spell) s);
+		if(this instanceof Mage) {
+			for(Minion minion: this.field) {
+				if(minion.getName().equals("Kalycgos")) {
+					((Spell) s).setManaCost(((Spell) s).getManaCost()-4);
+				}
+			}
+		}
 		this.setCurrentManaCrystals(this.currentManaCrystals-(((Card) s).getManaCost()));
 	}
 	public void castSpell(AOESpell s, ArrayList<Minion> oppField) throws
@@ -157,24 +161,45 @@ public abstract class Hero implements MinionListener{
 		this.validator.validateManaCost((Card) s);
 		s.performAction(oppField, this.field);
 		this.hand.remove((Card)s);
-		
-		this.setCurrentManaCrystals(this.currentManaCrystals-(((Card) s).getManaCost()));
+		if(this instanceof Mage) {
+			for(Minion minion: this.field) {
+				if(minion.getName().equals("Kalycgos")) {
+					((Spell) s).setManaCost(((Spell) s).getManaCost()-4);
+					break;
+				}
+			}
+		}
+		this.setCurrentManaCrystals(this.currentManaCrystals-(((Spell) s).getManaCost()));
 	}
 	public void castSpell(MinionTargetSpell s, Minion m) throws NotYourTurnException,
 	NotEnoughManaException, InvalidTargetException{
 		this.validator.validateTurn(this);
 		this.validator.validateManaCost((Card)s);
+		if(this instanceof Mage) {
+			for(Minion minion: this.field) {
+				if(minion.getName().equals("Kalycgos")) {
+					((Spell)s).setManaCost(((Spell) s).getManaCost() - 4);
+				}
+			}
+		}
+		this.setCurrentManaCrystals(this.currentManaCrystals-(((Spell) s).getManaCost()));
 		s.performAction(m);
-		this.hand.remove((Card)s);
-		this.setCurrentManaCrystals(this.currentManaCrystals-(((Card) s).getManaCost()));
+		this.hand.remove((Spell)s);
 	}
 	public void castSpell(HeroTargetSpell s, Hero h) throws NotYourTurnException,
 	NotEnoughManaException{
 		this.validator.validateTurn(this);
 		this.validator.validateManaCost((Card)s);
 		s.performAction(h);
-		this.hand.remove((Card)s);
-		this.setCurrentManaCrystals(this.currentManaCrystals-(((Card) s).getManaCost()));
+		this.hand.remove((Spell)s);
+		if(this instanceof Mage) {
+			for(Minion minion: this.field) {
+				if(minion.getName().equals("Kalycgos")) {
+					((Spell) s).setManaCost(((Spell) s).getManaCost()-4);
+				}
+			}
+		}
+		this.setCurrentManaCrystals(this.currentManaCrystals-(((Spell) s).getManaCost()));
 	}
 	public void castSpell(LeechingSpell s, Minion m) throws NotYourTurnException,
 	NotEnoughManaException{
@@ -182,8 +207,14 @@ public abstract class Hero implements MinionListener{
 		this.validator.validateManaCost((Card)s);
 		int h = s.performAction(m);
 		this.setCurrentHP(this.getCurrentHP() + h);
-		this.hand.remove((Card)s);
-		
+		this.hand.remove((Spell)s);
+		if(this instanceof Mage) {
+			for(Minion minion: this.field) {
+				if(minion.getName().equals("Kalycgos")) {
+					((Spell) s).setManaCost(((Spell) s).getManaCost()-4);
+				}
+			}
+		}
 		this.setCurrentManaCrystals(this.currentManaCrystals-(((Card) s).getManaCost()));
 	}
 	public Card drawCard() throws FullHandException, CloneNotSupportedException{
@@ -197,11 +228,27 @@ public abstract class Hero implements MinionListener{
 			throw new FullHandException("You have a full hand", drawn);
 		}
 		this.deck.remove(drawn);
+		this.hand.add(drawn);
+		if(this instanceof Warlock) {
+			if(this.heroPowerUsed) {
+			for(Minion special:this.field) {
+				if(special.getName().equals("Wilfred Fizzlebang")) {
+					drawn.setManaCost(0);
+					break;
+				}
+			}
+		}
+		}
+		for(Minion minion: this.field) {
+			if(minion.getName().equals("Chromaggus")) {
+				if(this.hand.size()!=10) {
+					this.hand.add(drawn.clone());
+				}
+			}
+		}
 		if(this.deck.size()==0) {
 			this.fatigueDamage = 1;
 		}
-		this.hand.add(drawn);
-
 		return drawn;
 		
 	}

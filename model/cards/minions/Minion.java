@@ -19,7 +19,7 @@ public class Minion extends Card implements Cloneable {
 		super(name, manaCost, rarity);
 		setAttack(attack);
 		this.maxHP = maxHP;
-		setCurrentHP(maxHP);
+		this.currentHP = maxHP;
 		this.taunt = taunt;
 		this.divine = divine;
 		this.sleeping = !charge;
@@ -58,11 +58,9 @@ public class Minion extends Card implements Cloneable {
 		this.maxHP = maxHP;
 	}
 	public void setCurrentHP(int currentHP) {
-		if(currentHP>this.maxHP) {
-			return;
-		}
-		this.currentHP = currentHP;
 		if(currentHP<=0) this.minionDeath();
+		else
+		this.currentHP = currentHP;
 	}
 	public void setTaunt(boolean taunt) {
 		this.taunt = taunt;
