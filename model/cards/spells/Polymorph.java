@@ -9,6 +9,12 @@ public class Polymorph extends Spell implements MinionTargetSpell {
 		super("Polymorph", 4, Rarity.BASIC);
 	}
 	public void performAction(Minion m) {
+		
+		if(m.getName().equals("Icehowl"))
+			m.setSleeping(false);
+		else
+			m.setSleeping(true);
+		
 		m.setName("Sheep");
 		m.setCurrentHP(1);
 		m.setMaxHP(1);
@@ -16,11 +22,6 @@ public class Polymorph extends Spell implements MinionTargetSpell {
 		m.setManaCost(1);
 		m.setDivine(false);
 		m.setTaunt(false);
-		if(m.getName() == "Icehowl") {
-		m.setSleeping(false);
 	}
-		else {
-			m.setSleeping(true);
-		}
-	}
+	
 }
