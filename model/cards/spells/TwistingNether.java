@@ -20,8 +20,8 @@ public class TwistingNether extends Spell implements AOESpell {
 				Dead.add(curField.get(i));
 			}
 		}
-		curField.clear();
-		oppField.clear();
+		//curField.clear();
+		//oppField.clear();
 		for(Minion m: Dead) {
 			m.minionDeath();
 		}
