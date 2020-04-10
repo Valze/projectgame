@@ -26,22 +26,21 @@ public class MultiShot extends Spell implements AOESpell {
 		
 					if(canHit(oppField.get(i))) {
 						oppField.get(i).setCurrentHP(oppField.get(i).getCurrentHP() - 3);
-					
-					if(oppField.size() == 1) {
+					}
+					/*if(oppField.size() == 1) {
 						if(canHit(oppField.get(0))) {
 							oppField.get(0).setCurrentHP(oppField.get(0).getCurrentHP() - 3);
-					}
+					}*/
 					
-					else {
+					
 						int j;
 						do { j = (int)(Math.random()*oppField.size()); }
 						while(i == j);					
 						if(canHit(oppField.get(j))) {
 							oppField.get(j).setCurrentHP(oppField.get(j).getCurrentHP() - 3);
-					}
+						}
+					
 		}
-	}
-}
 		}
-	}
 }
+
