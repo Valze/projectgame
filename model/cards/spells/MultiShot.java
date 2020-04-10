@@ -26,16 +26,10 @@ public class MultiShot extends Spell implements AOESpell {
 		
 					if(canHit(oppField.get(i))) {
 						oppField.get(i).setCurrentHP(oppField.get(i).getCurrentHP() - 3);
-						if(oppField.get(i).getCurrentHP() <= 0) 
-							oppField.remove(i).minionDeath();
-					}
 					
 					if(oppField.size() == 1) {
 						if(canHit(oppField.get(0))) {
 							oppField.get(0).setCurrentHP(oppField.get(0).getCurrentHP() - 3);
-							if(oppField.get(0).getCurrentHP() <= 0) 
-								oppField.remove(0).minionDeath();
-						}
 					}
 					
 					else {
@@ -44,10 +38,10 @@ public class MultiShot extends Spell implements AOESpell {
 						while(i == j);					
 						if(canHit(oppField.get(j))) {
 							oppField.get(j).setCurrentHP(oppField.get(j).getCurrentHP() - 3);
-							if(oppField.get(j).getCurrentHP() <= 0) 
-								oppField.remove(j).minionDeath();
-						}
 					}
+		}
+	}
+}
 		}
 	}
 }
