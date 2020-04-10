@@ -12,31 +12,41 @@ public class MultiShot extends Spell implements AOESpell {
 	}
 	
 	public void performAction(ArrayList<Minion> oppField , ArrayList<Minion> curField)  {
+		
 		int s = oppField.size();
 		
 		switch(s) {
 		case 0: return;
-		case 1: if(oppField.get(0).isDivine()) oppField.get(0).setDivine(false);
-				else {
+		case 1: if(canHit(oppField.get(0)))	{	
 					oppField.get(0).setCurrentHP(oppField.get(0).getCurrentHP() - 3);
+					if(oppField.get(0).getCurrentHP() <= 0) oppField.remove(0).minionDeath();
 				}
 				break;
-		case 2: if(oppField.get(0).isDivine()) oppField.get(0).setDivine(false);
-				else {
-					oppField.get(0).setCurrentHP(oppField.get(0).getCurrentHP() - 3);
-				}
-				if(oppField.get(1).isDivine()) oppField.get(1).setDivine(false);
-				else {
-					oppField.get(1).setCurrentHP(oppField.get(1).getCurrentHP() - 3);
-				}
-				break;
-		default:	if(oppField.get(oppField.size()/2).isDivine()) oppField.get(oppField.size()/2).setDivine(false);
-					else {
-						oppField.get(oppField.size()/2).setCurrentHP(oppField.get(oppField.size()/2).getCurrentHP() - 3);
+		default:	int i = (int)(Math.random()*oppField.size());
+		
+					if(canHit(oppField.get(i))) {
+						oppField.get(i).setCurrentHP(oppField.get(i).getCurrentHP() - 3);
+						if(oppField.get(i).getCurrentHP() <= 0) 
+							oppField.remove(i).minionDeath();
 					}
-					if(oppField.get((oppField.size()/2)-1).isDivine()) oppField.get((oppField.size()/2)-1).setDivine(false);
+					
+					if(oppField.size() == 1) {
+						if(canHit(oppField.get(0))) {
+							oppField.get(0).setCurrentHP(oppField.get(0).getCurrentHP() - 3);
+							if(oppField.get(0).getCurrentHP() <= 0) 
+								oppField.remove(0).minionDeath();
+						}
+					}
+					
 					else {
-						oppField.get((oppField.size()/2)-1).setCurrentHP(oppField.get((oppField.size()/2)-1).getCurrentHP() - 3);
+						int j;
+						do { j = (int)(Math.random()*oppField.size()); }
+						while(i == j);					
+						if(canHit(oppField.get(j))) {
+							oppField.get(j).setCurrentHP(oppField.get(j).getCurrentHP() - 3);
+							if(oppField.get(j).getCurrentHP() <= 0) 
+								oppField.remove(j).minionDeath();
+						}
 					}
 		}
 	}
