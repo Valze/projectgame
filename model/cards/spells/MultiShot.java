@@ -38,10 +38,10 @@ public class MultiShot extends Spell implements AOESpell {
 						oppField.get(oppField.size()/2).setCurrentHP(oppField.get(oppField.size()/2).getCurrentHP() - 3);
 						if(oppField.get(oppField.size()/2).getCurrentHP() <= 0) oppField.remove(oppField.size()/2).minionDeath();
 					}
-					if(oppField.get((oppField.size()/2)+1).isDivine()) oppField.get((oppField.size()/2)+1).setDivine(false);
+					if(oppField.get((oppField.size()/2)-1).isDivine()) oppField.get((oppField.size()/2)-1).setDivine(false);
 					else {
-						oppField.get((oppField.size()/2)+1).setCurrentHP(oppField.get((oppField.size()/2)+1).getCurrentHP() - 3);
-						if(oppField.get((oppField.size()/2)+1).getCurrentHP() <= 0) oppField.remove((oppField.size()/2)+1).minionDeath();
+						oppField.get((oppField.size()/2)-1).setCurrentHP(oppField.get((oppField.size()/2)-1).getCurrentHP() - 3);
+						if(oppField.get((oppField.size()/2)-1).getCurrentHP() <= 0) oppField.remove((oppField.size()/2)-1).minionDeath();
 					}
 		}
 	}
