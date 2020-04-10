@@ -23,7 +23,6 @@ public class Flamestrike extends Spell implements AOESpell {
 			}
 	}
 		for(Minion m: Dead) {
-			oppField.remove(m);
 			m.setCurrentHP(m.getCurrentHP()-4);
 		}
 		
