@@ -41,6 +41,14 @@ public class Warlock extends Hero {
 	}
 	public void useHeroPower() throws NotEnoughManaException, HeroPowerAlreadyUsedException, NotYourTurnException, FullHandException, FullFieldException, CloneNotSupportedException {
 		super.useHeroPower();
+		for(Minion special:this.getField()) {
+			if(special.getName().equals("Wilfred Fizzlebang")) {
+				if(getDeck().size()>0 && getDeck().get(0) instanceof Minion) {
+					getDeck().get(0).setManaCost(0);
+					break;
+				}
+			}
+		}
 		this.drawCard();
 		this.setCurrentHP(this.getCurrentHP() - 2);
 	}

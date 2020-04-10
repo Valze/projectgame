@@ -40,7 +40,13 @@ public class Paladin extends Hero {
 	public void useHeroPower() throws NotEnoughManaException, HeroPowerAlreadyUsedException, NotYourTurnException, FullHandException, FullFieldException, CloneNotSupportedException {
 		super.useHeroPower();
 		Minion silver = new Minion("Silver Hand Recruit", 1, Rarity.BASIC, 1,1,false,false,false);
-		this.playMinion(silver);
+		ArrayList<Minion> field = this.getField();
+		if(field.size()==7) {
+			throw new FullFieldException();
+		}
+		else {
+			field.add(silver);
+		}
 	}
 	
 }

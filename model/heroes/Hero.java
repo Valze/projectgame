@@ -119,10 +119,8 @@ public abstract class Hero implements MinionListener{
 	}
 	public void playMinion(Minion m) throws NotYourTurnException, NotEnoughManaException, FullFieldException{
 		this.validator.validateTurn(this);
+		this.validator.validatePlayingMinion(m);
 		this.validator.validateManaCost(m);
-		if(this.field.size()==7) {
-			throw new FullFieldException();
-		}
 		this.hand.remove(m);
 		this.field.add(m);
 	}
@@ -229,16 +227,7 @@ public abstract class Hero implements MinionListener{
 		}
 		this.deck.remove(drawn);
 		this.hand.add(drawn);
-		if(this instanceof Warlock) {
-			if(this.heroPowerUsed) {
-			for(Minion special:this.field) {
-				if(special.getName().equals("Wilfred Fizzlebang")) {
-					drawn.setManaCost(0);
-					break;
-				}
-			}
-		}
-		}
+		
 		for(Minion minion: this.field) {
 			if(minion.getName().equals("Chromaggus")) {
 				if(this.hand.size()!=10) {
