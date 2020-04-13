@@ -121,8 +121,10 @@ public abstract class Hero implements MinionListener{
 		this.validator.validateTurn(this);
 		this.validator.validatePlayingMinion(m);
 		this.validator.validateManaCost(m);
+		this.setCurrentManaCrystals(this.getCurrentManaCrystals()- m.getManaCost());
 		this.hand.remove(m);
 		this.field.add(m);
+		
 	}
 	public void attackWithMinion(Minion attacker, Minion target) throws
 	CannotAttackException, NotYourTurnException, TauntBypassException,
@@ -130,6 +132,7 @@ public abstract class Hero implements MinionListener{
 		this.validator.validateTurn(this);
 		this.validator.validateAttack(attacker, target);
 		attacker.attack(target);
+		attacker.setAttacked(true);
 	}
 	public void attackWithMinion(Minion attacker, Hero target) throws
 	CannotAttackException, NotYourTurnException, TauntBypassException,
@@ -137,6 +140,7 @@ public abstract class Hero implements MinionListener{
 		this.validator.validateTurn(this);
 		this.validator.validateAttack(attacker, target);
 		attacker.attack(target);
+		attacker.setAttacked(true);
 	}
 	public void castSpell(FieldSpell s) throws NotYourTurnException,
 	NotEnoughManaException{
