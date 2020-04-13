@@ -13,5 +13,8 @@ public class ShadowWordDeath extends Spell implements MinionTargetSpell {
 		if(m.getAttack()>=5) {
 			m.minionDeath();
 		}
+		else {
+			throw new InvalidTargetException("Minion has less than 5 attack");
+		}
 	}
 }
