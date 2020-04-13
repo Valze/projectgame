@@ -101,6 +101,9 @@ public class Game implements ActionValidator , HeroListener {
 		else if(attacker.isAttacked()==true) {
 			throw new CannotAttackException("Minion already attacked");
 		}
+		else if(attacker.getAttack()<=0) {
+			throw new CannotAttackException("Minion has no attack power");
+		}
 		else if(currentHero == target) {
 			throw new CannotAttackException("Cannot attack own hero");
 		}
