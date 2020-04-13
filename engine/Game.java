@@ -105,7 +105,7 @@ public class Game implements ActionValidator , HeroListener {
 			throw new CannotAttackException("Minion has no attack power");
 		}
 		else if(currentHero == target) {
-			throw new CannotAttackException("Cannot attack own hero");
+			throw new InvalidTargetException("Cannot attack own hero");
 		}
 		else {
 			for(Minion i :opponent.getField()){
