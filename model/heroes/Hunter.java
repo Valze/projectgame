@@ -37,8 +37,8 @@ public class Hunter extends Hero {
 		hunterDeck.add(kingKrush.clone());
 		shuffle(hunterDeck);
 	}
-	public void useHeroPower(Hero target) throws NotEnoughManaException, HeroPowerAlreadyUsedException, NotYourTurnException, FullHandException, FullFieldException, CloneNotSupportedException {
+	public void useHeroPower() throws NotEnoughManaException, HeroPowerAlreadyUsedException, NotYourTurnException, FullHandException, FullFieldException, CloneNotSupportedException {
 		super.useHeroPower();
-		target.setCurrentHP(target.getCurrentHP() - 2);
+		this.getListener().damageOpponent(2);
 	}
 }

@@ -117,7 +117,14 @@ public class Minion extends Card implements Cloneable {
 	}
 	public void attack(Hero target) throws InvalidTargetException {
 		if(this instanceof Icehowl) {
-			throw new InvalidTargetException("Icehowl cannot target heroes");
+			if(this.getName().equals("Sheep")) {
+				target.setCurrentHP(target.getCurrentHP() - this.attack);
+				attacked = !attacked;
+			}
+			else {
+				throw new InvalidTargetException("Icehowl cannot target heroes");
+			
+			}
 		}
 		else {
 			target.setCurrentHP(target.getCurrentHP() - this.attack);
