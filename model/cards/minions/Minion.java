@@ -134,4 +134,10 @@ public class Minion extends Card implements Cloneable {
 	public Minion clone() throws CloneNotSupportedException {
 		return (Minion) super.clone();
 	}
+	public String toString() {
+		return super.toString() 
+				+ "<br>Attack: " +  this.attack
+				+ "<br>HP: " + this.currentHP +"</html>";
+		
+	}
 }

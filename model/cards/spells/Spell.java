@@ -19,5 +19,8 @@ abstract public class Spell extends Card {
 			return true;
 		}
 	}
+	public String toString() {
+		return super.toString() + "</html>";
+	}
 
 }

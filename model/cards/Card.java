@@ -39,5 +39,9 @@ public abstract class Card implements Cloneable{
 	public Card clone() throws CloneNotSupportedException {
 		return (Card) super.clone();
 	}
+	public String toString() {
+		return "<html><strong>Name: "+ this.name + "</strong>" + 
+				"<br>Mana Cost: " + this.manaCost;
+	}
 }
 
