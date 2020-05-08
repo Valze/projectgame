@@ -15,20 +15,26 @@ public class HeroPanel extends JPanel{
 			CardList updated = new CardList(cards);
 			return updated;
 		}
+		public void play(){
+			
+		}
 	}
+	Hero related;
 	JLabel heroName;
+	JButton heroPower;
 	CardList cards;
-	JButton endTurn;
 	public HeroPanel(Hero h, boolean Up) {
 		super(new BorderLayout());
+		related = h;
 		String heroInfo = "<div style='text-align:center;'>" + "<h1>"+h.getName() + "</h1>"
 						+ "<br>HP: " + h.getCurrentHP() 
-						+"<br>Mana: "+ h.getCurrentManaCrystals()+"</div>";
+						+"<br>Mana: "+ h.getCurrentManaCrystals() +" out of " +h.getTotalManaCrystals()+"</div>";
 		heroName = new JLabel("<html> "+ heroInfo + "</html>");
 		cards = new CardList(h.getHand().toArray());
-		endTurn = new JButton("End turn");
+		heroPower = new JButton("<html> Use Hero Power </html>");
 		JPanel internal = new JPanel(); //JPanel to center Hero information
 		internal.add(heroName);
+		internal.add(heroPower);
 		Box box = new Box(BoxLayout.Y_AXIS); //Layout used to center said JPanel
         box.add(Box.createVerticalGlue());
         box.add(internal);     
@@ -43,8 +49,6 @@ public class HeroPanel extends JPanel{
 		else {
 			this.add(BorderLayout.SOUTH, cards);
 		}
-		this.add(BorderLayout.EAST, endTurn); //will change later to be
-											//one endturn button
 		//this.setSize(new Dimension(50,50));
 		//this.setMaximumSize(new Dimension(100, 100));
 		this.setVisible(true);
