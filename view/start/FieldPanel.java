@@ -11,8 +11,8 @@ public class FieldPanel extends JSplitPane {
 	HeroField firstField;
 	HeroField secondField;
 	public FieldPanel(Hero first, Hero second) {
-		firstField = new HeroField(first.getField().toArray(), first);
-		secondField = new HeroField(second.getField().toArray(), second);
+		firstField = new HeroField(first.getField().toArray());
+		secondField = new HeroField(second.getField().toArray());
 		this.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		this.setBottomComponent(firstField);
 		this.setTopComponent(secondField);
