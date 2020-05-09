@@ -5,14 +5,6 @@ import model.cards.minions.Minion;
 import model.heroes.Hero;
 
 public class HeroField extends JPanel {
-	public class MinionButton extends JButton{
-		Minion minion;
-		public MinionButton(Minion minion, Hero h) {
-			super(minion.toString());
-			this.minion = minion;
-			this.minion.setListener(h);
-		}
-	}
 	MinionButton[] cards;
 	public HeroField(Object[] minions, Hero h) {
 		this.cards = new MinionButton[minions.length];

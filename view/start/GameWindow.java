@@ -32,8 +32,8 @@ public class GameWindow extends JFrame implements MouseListener, GameListener  {
 	HeroPanel secondHero;
 	JButton endTurn;
 	JLabel selected;
-	Minion attacker;
-	Minion toAttack;
+	Minion selectedMinion;
+	
 	public GameWindow(Hero p1, Hero p2) throws FullHandException, CloneNotSupportedException {
 		super();
 		game = new Game(p1, p2);
@@ -60,6 +60,10 @@ public class GameWindow extends JFrame implements MouseListener, GameListener  {
 		try {
 			if (e.getSource()== this.endTurn) {
 				game.endTurn();
+				selectedMinion = null;
+				if(selected!=null) {
+					this.remove(selected);
+				}
 			}
 			if (e.getSource()==firstHero.heroPower) {
 				try {
@@ -86,27 +90,24 @@ public class GameWindow extends JFrame implements MouseListener, GameListener  {
 			//TODO: allow player to actually play a card
 			for(int i = 0; i<field.firstField.cards.length; i++) {
 				if (e.getSource()==field.firstField.cards[i]) {
-					if(field.firstField.cards[i].minion.isSleeping()) {
-						attacker = null;
-						//throw output message about minion being asleep
-					}
-					else {
-						attacker = field.firstField.cards[i].minion;
-					}
+					selectedMinion = field.firstField.cards[i].minion;
 				}
 			}
+			Minion toAttack = null;
 			for(int j = 0; j<field.secondField.cards.length; j++) {
 				if (e.getSource()==field.secondField.cards[j]) {
 					toAttack = field.secondField.cards[j].minion;
 				}
 			}
-			if(attacker!=null && toAttack!=null) {
-				attacker.attack(toAttack);
+			if(selectedMinion!=null && toAttack!=null) {
+				if(!selectedMinion.isSleeping()) {
+					selectedMinion.attack(toAttack);
+				}
+				else {
+					//output message about minion being asleep
+				}
 			}
 			//first remove old GUI components
-			if(this.selected!=null) {
-				this.remove(selected);
-			}
 			this.remove(firstHero);
 			this.remove(secondHero);
 			this.remove(field);
@@ -126,11 +127,21 @@ public class GameWindow extends JFrame implements MouseListener, GameListener  {
 			this.add(BorderLayout.SOUTH, firstHero);
 			this.add(BorderLayout.NORTH, secondHero);
 			this.add(BorderLayout.CENTER, field);
-			//this.add(BorderLayout.WEST, selected);
 			this.revalidate();
+			if(selectedMinion!=null) {
+				if(selected!=null) {
+					this.remove(selected);
+				}
+				selected = new JLabel(selectedMinion.toString());
+				selected.setVisible(true);
+				this.add(BorderLayout.WEST, selected);	
+			}
 			firstHero.repaint();
 			secondHero.repaint();
 			field.repaint();
+			if(this.selected!=null) {
+				selected.repaint();
+			}
 			this.repaint();
 		} catch (FullHandException e1) {
 			// TODO show FullHandException error
@@ -152,12 +163,31 @@ public class GameWindow extends JFrame implements MouseListener, GameListener  {
 	}
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+		Minion toAttack = null;
+		for(int j = 0; j<field.secondField.cards.length; j++) {
+			if (e.getSource()==field.secondField.cards[j]) {
+				toAttack = field.secondField.cards[j].minion;
+			}
+		}
+		if(selectedMinion!=null && toAttack!=null) {
+			if(selected!=null) {
+				this.remove(selected);
+			}
+			selected = new JLabel("<html>"
+					+ "<h1>RESULT OF ATTACK</h1>"
+					+ "<br><h2>" + selectedMinion.getName()
+					+ "<br>HP: " + (selectedMinion.getCurrentHP() - toAttack.getAttack())
+					+ "</html>");
+			selected.setVisible(true);
+			this.add(BorderLayout.WEST, selected);
+			this.revalidate();
+			selected.repaint();
+			this.repaint();
+		}
 	}
 	@Override
 	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 	@Override

@@ -136,11 +136,11 @@ public class Minion extends Card implements Cloneable {
 	}
 	public String toString() {
 		if(this.getName().equals("HIDDEN")) {
-			return "<html> <p style='font-size:large;'>HIDDEN<br>CARD</html>";
+			return "<html><p style='font-size:large;'>HIDDEN<br>CARD</html>";
 		}
 		String taunt = isTaunt()? "<br>Taunt":"";
 		String divine = isDivine()? "<br>Divine":"";
-		String charge = isSleeping()? "<br>Cannot attack":"<br>Can attack";
+		String charge = isSleeping()? "":"<br>Charge";
 		return super.toString() 
 				+ "<br>Attack: " +  this.attack
 				+ "<br>HP: " + this.currentHP 

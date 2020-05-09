@@ -46,6 +46,7 @@ public class Paladin extends Hero {
 		}
 		else {
 			field.add(silver);
+			silver.setListener(this);
 		}
 	}
 	

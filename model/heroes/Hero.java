@@ -124,7 +124,7 @@ public abstract class Hero implements MinionListener{
 		this.setCurrentManaCrystals(this.getCurrentManaCrystals()- m.getManaCost());
 		this.hand.remove(m);
 		this.field.add(m);
-		
+		m.setListener(this);
 	}
 	public void attackWithMinion(Minion attacker, Minion target) throws
 	CannotAttackException, NotYourTurnException, TauntBypassException,
