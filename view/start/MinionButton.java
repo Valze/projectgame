@@ -7,9 +7,8 @@ import model.heroes.Hero;
 
 public class MinionButton extends JButton{
 	Minion minion;
-	public MinionButton(Minion minion, Hero h) {
+	public MinionButton(Minion minion) {
 		super(minion.toString());
 		this.minion = minion;
-		this.minion.setListener(h);
 	}
 }
