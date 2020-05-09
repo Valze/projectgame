@@ -18,11 +18,13 @@ public class Main {
 		Hero hunter = new Hunter();
 		Hero paladin = new Paladin();
 		Game game = new Game(hunter, paladin);
-		HeroPanel firstHero = new HeroPanel(hunter, false); 
+		HeroPanel firstHero = new HeroPanel(hunter, false);
+		JButton endTurn = new JButton("End turn");
 		//HeroPanels are responsible for rendering each Hero's
 		//HP, mana, hero power, and hand
 		HeroPanel secondHero = new HeroPanel(paladin, true);
 		window.add(BorderLayout.SOUTH, firstHero);
+		window.add(BorderLayout.EAST, endTurn);
 		JTextArea text = new JTextArea();
 		window.add(BorderLayout.CENTER, text);
 		window.add(BorderLayout.NORTH, secondHero);

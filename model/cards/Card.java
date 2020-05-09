@@ -41,7 +41,8 @@ public abstract class Card implements Cloneable{
 	}
 	public String toString() {
 		return "<html><strong>Name: "+ this.name + "</strong>" + 
-				"<br>Mana Cost: " + this.manaCost;
+				"<br>Mana Cost: " + this.manaCost
+				+"<br>Rarity: " + this.rarity;
 	}
 }
 
