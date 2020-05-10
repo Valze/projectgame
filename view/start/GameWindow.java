@@ -12,12 +12,22 @@ import javax.swing.JButton;
 
 import engine.Game;
 import engine.GameListener;
+import exceptions.CannotAttackException;
 import exceptions.FullFieldException;
 import exceptions.FullHandException;
 import exceptions.HeroPowerAlreadyUsedException;
+import exceptions.InvalidTargetException;
 import exceptions.NotEnoughManaException;
+import exceptions.NotSummonedException;
 import exceptions.NotYourTurnException;
+import exceptions.TauntBypassException;
+import model.cards.Card;
 import model.cards.minions.Minion;
+import model.cards.spells.AOESpell;
+import model.cards.spells.FieldSpell;
+import model.cards.spells.LeechingSpell;
+import model.cards.spells.MinionTargetSpell;
+import model.cards.spells.Spell;
 import model.heroes.Hero;
 import model.heroes.Hunter;
 import model.heroes.Paladin;
@@ -32,7 +42,7 @@ public class GameWindow extends JFrame implements MouseListener, GameListener  {
 	HeroPanel secondHero;
 	JButton endTurn;
 	JLabel selected;
-	Minion selectedMinion;
+	Card selectedCard;
 	
 	public GameWindow(Hero p1, Hero p2) throws FullHandException, CloneNotSupportedException {
 		super();
@@ -45,6 +55,9 @@ public class GameWindow extends JFrame implements MouseListener, GameListener  {
 		endTurn.addMouseListener(this);
 		firstHero.heroPower.addMouseListener(this);
 		secondHero.heroPower.addMouseListener(this);
+		for(int handButton = 0; handButton<firstHero.cards.hand.length;handButton++) {
+			firstHero.cards.hand[handButton].addMouseListener(this);
+		}
 		this.setLayout(new BorderLayout());
 		this.add(BorderLayout.SOUTH, firstHero);
 		this.add(BorderLayout.EAST, endTurn);
@@ -60,7 +73,7 @@ public class GameWindow extends JFrame implements MouseListener, GameListener  {
 		try {
 			if (e.getSource()== this.endTurn) {
 				game.endTurn();
-				selectedMinion = null;
+				selectedCard = null;
 				if(selected!=null) {
 					this.remove(selected);
 				}
@@ -85,26 +98,104 @@ public class GameWindow extends JFrame implements MouseListener, GameListener  {
 			if (e.getSource()==secondHero.heroPower) {
 				//pop-out window for illegal action
 			}
-			//might be a good idea to put all of the minion attack logic in a separate method
+			//might be a good idea to put all of the minion attack/spelCast logic in a separate method
 			//and call it here
-			//TODO: allow player to actually play a card
-			for(int i = 0; i<field.firstField.cards.length; i++) {
-				if (e.getSource()==field.firstField.cards[i]) {
-					selectedMinion = field.firstField.cards[i].minion;
-				}
-			}
+			//TODO: allow player to actually play a card, DONE
+			//TODO: allow player to cast spells, done
+			//TODO: allow player to target enemy hero with minions or spells
 			Minion toAttack = null;
 			for(int j = 0; j<field.secondField.cards.length; j++) {
 				if (e.getSource()==field.secondField.cards[j]) {
-					toAttack = field.secondField.cards[j].minion;
+					toAttack = (Minion) field.secondField.cards[j].card;
 				}
 			}
-			if(selectedMinion!=null && toAttack!=null) {
-				if(!selectedMinion.isSleeping()) {
-					selectedMinion.attack(toAttack);
+			for(int i = 0; i<field.firstField.cards.length; i++) {
+				if (e.getSource()==field.firstField.cards[i]) {
+					if(selectedCard!=null && selectedCard instanceof Spell) {
+						toAttack = (Minion) field.firstField.cards[i].card;
+					}
+					else {
+						selectedCard = (Minion) field.firstField.cards[i].card;
+					}
+					
+				}
+			}
+			
+			if(selectedCard!=null && toAttack!=null) {
+				if(selectedCard instanceof Minion) {
+					Minion selectedMinion = (Minion) selectedCard;
+					try {
+						game.getCurrentHero().attackWithMinion(selectedMinion, toAttack);
+					} 
+					catch (CannotAttackException | NotYourTurnException | TauntBypassException
+							| InvalidTargetException | NotSummonedException e1) {
+						// TODO Handle exceptions and output errors
+						e1.printStackTrace();
+					}
+					selectedCard = null;
+					
 				}
 				else {
-					//output message about minion being asleep
+					Spell selectedSpell = (Spell) selectedCard;
+					if(selectedSpell instanceof MinionTargetSpell) {
+						try {
+							game.getCurrentHero().castSpell((MinionTargetSpell)selectedSpell, toAttack);
+						} catch (NotYourTurnException | NotEnoughManaException | InvalidTargetException e1) {
+							// TODO Handle exceptions and output errors
+							e1.printStackTrace();
+						}
+					}
+					else if(selectedSpell instanceof LeechingSpell) {
+						try {
+							game.getCurrentHero().castSpell((LeechingSpell)selectedSpell, toAttack);
+						} catch (NotYourTurnException | NotEnoughManaException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					}
+					selectedCard = null;
+				}
+			}
+			Minion minionToPlay = null;
+			for(int handCard = 0; handCard<firstHero.cards.hand.length;handCard++) {
+				if (e.getSource()==firstHero.cards.hand[handCard]) {
+					if(firstHero.cards.hand[handCard].card instanceof Minion) {
+						minionToPlay = (Minion) firstHero.cards.hand[handCard].card;
+						try {
+							game.getCurrentHero().playMinion(minionToPlay);
+						} catch (NotYourTurnException | NotEnoughManaException | FullFieldException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					}
+					else {
+						selectedCard = (Spell) firstHero.cards.hand[handCard].card;
+						if(selectedCard instanceof AOESpell) {
+							try {
+								game.getCurrentHero().castSpell((AOESpell) selectedCard, game.getOpponent().getField());
+							} catch (NotYourTurnException | NotEnoughManaException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+						}
+						else if(selectedCard instanceof AOESpell) {
+							try {
+								game.getCurrentHero().castSpell((AOESpell) selectedCard, game.getOpponent().getField());
+							} catch (NotYourTurnException | NotEnoughManaException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+						}
+						else if(selectedCard instanceof FieldSpell) {
+							try {
+								game.getCurrentHero().castSpell((FieldSpell) selectedCard);
+								
+							} catch (NotYourTurnException | NotEnoughManaException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+						}
+					}
 				}
 			}
 			//first remove old GUI components
@@ -117,6 +208,9 @@ public class GameWindow extends JFrame implements MouseListener, GameListener  {
 			field = new FieldPanel(game.getCurrentHero(), game.getOpponent());
 			firstHero.heroPower.addMouseListener(this);
 			secondHero.heroPower.addMouseListener(this);
+			for(int handButton = 0; handButton<firstHero.cards.hand.length;handButton++) {
+				firstHero.cards.hand[handButton].addMouseListener(this);
+			}
 			for(int i = 0; i<field.firstField.cards.length; i++) {
 				field.firstField.cards[i].addMouseListener(this);
 			}
@@ -127,15 +221,15 @@ public class GameWindow extends JFrame implements MouseListener, GameListener  {
 			this.add(BorderLayout.SOUTH, firstHero);
 			this.add(BorderLayout.NORTH, secondHero);
 			this.add(BorderLayout.CENTER, field);
-			this.revalidate();
-			if(selectedMinion!=null) {
+			if(selectedCard!=null) {
 				if(selected!=null) {
 					this.remove(selected);
 				}
-				selected = new JLabel(selectedMinion.toString());
+				selected = new JLabel(selectedCard.toString());
 				selected.setVisible(true);
 				this.add(BorderLayout.WEST, selected);	
 			}
+			this.revalidate();
 			firstHero.repaint();
 			secondHero.repaint();
 			field.repaint();
@@ -166,10 +260,11 @@ public class GameWindow extends JFrame implements MouseListener, GameListener  {
 		Minion toAttack = null;
 		for(int j = 0; j<field.secondField.cards.length; j++) {
 			if (e.getSource()==field.secondField.cards[j]) {
-				toAttack = field.secondField.cards[j].minion;
+				toAttack = (Minion) field.secondField.cards[j].card;
 			}
 		}
-		if(selectedMinion!=null && toAttack!=null) {
+		if(selectedCard!=null && toAttack!=null && selectedCard instanceof Minion) {
+			Minion selectedMinion = (Minion) selectedCard;
 			if(selected!=null) {
 				this.remove(selected);
 			}
