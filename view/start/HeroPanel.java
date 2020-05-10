@@ -9,37 +9,29 @@ import model.heroes.Hero;
 
 import java.awt.*;
 public class HeroPanel extends JPanel{
-	public class CardList extends JList{
-		public int size;
-		public CardList concealed;
-		public CardList(Object[] cards, int size) {
-			super(cards);
-			this.size = size;
-			this.concealed = this.hideCards();
-			this.setVisibleRowCount(1);
-			this.setLayoutOrientation(JList.HORIZONTAL_WRAP);
-		}
-		public CardList updateHand(Object[] cards) {
-			CardList updated = new CardList(cards, cards.length);
-			return updated;
-		}
-		public CardList hideCards(){
-			if(size==0) {
-				return null;
-			}
-			Object[] hidden = new Object[size];
-			for(int i = 0; i<size; i++) {
+	public class HeroHand extends JPanel{
+		public CardButton[] hand;
+		public JPanel concealed;
+		public HeroHand(Object[] cards) {
+			hand = new CardButton[cards.length];
+			this.concealed = new JPanel();
+			for(int i = 0; i<cards.length; i++) {
+				if(cards[i] instanceof Minion) {
+					hand[i] = new MinionButton((Minion)cards[i]);
+				}
+				else {
+					hand[i] = new SpellButton((Spell)cards[i]);
+				}
 				Card hide = new Minion("HIDDEN", 0, Rarity.BASIC, 0, 0, false, false, false);
-				hidden[i] = hide;
+				concealed.add(new MinionButton((Minion)hide));
+				this.add(hand[i]);
 			}
-			CardList empty = new CardList(hidden, 0);
-			return empty;
 		}
 	}
 	Hero related;
 	JLabel heroName;
 	JButton heroPower;
-	CardList cards;
+	HeroHand cards;
 	JPanel cardHolder; //using a panel to center cards
 	public void hideCards() {
 		cardHolder.remove(cards);
@@ -57,7 +49,7 @@ public class HeroPanel extends JPanel{
 						+"<br>Mana: "+ h.getCurrentManaCrystals() +" out of " +h.getTotalManaCrystals()
 						+"<br>Cards in deck: "+h.getDeck().size()+"</div>";
 		heroName = new JLabel("<html> "+ heroInfo + "</html>");
-		cards = new CardList(h.getHand().toArray(), h.getHand().size());
+		cards = new HeroHand(h.getHand().toArray());
 		cardHolder.add(cards);
 		heroPower = new JButton("<html> Use Hero Power </html>");
 		JPanel internal = new JPanel(); //JPanel to center Hero information
