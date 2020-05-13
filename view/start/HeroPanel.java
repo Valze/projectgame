@@ -28,13 +28,6 @@ public class HeroPanel extends JPanel{
 			}
 		}
 	}
-	public class HeroButton extends JButton {
-		Hero related;
-		public HeroButton(Hero related, String heroInfo) {
-			super(heroInfo);
-			this.related = related;
-		}
-	}
 	HeroButton hero;
 	JButton heroPower;
 	HeroHand cards;

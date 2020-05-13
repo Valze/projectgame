@@ -15,134 +15,120 @@ import model.heroes.*;
 
 
 public class HeroSelectionWindow extends JFrame implements MouseListener {
-	JButton Hunter;
-	JButton Mage;
-	JButton Paladin;
-	JButton Warlock;
-	JButton Priest;
-	JButton Confirm;
-	JPanel Heroes;
-	JPanel display;
+	public class Heroes{
+		HeroButton[] heroes;
+		public Heroes() throws CloneNotSupportedException, IOException {
+			heroes = new HeroButton[5];
+			heroes[0] = new HeroButton(new Hunter());
+			heroes[1] = new HeroButton(new Mage());
+			heroes[2] = new HeroButton(new Warlock());
+			heroes[3] = new HeroButton(new Paladin());
+			heroes[4] = new HeroButton(new Priest());	
+		}
+		public void addListeners(HeroSelectionWindow s) {
+			for(int i =0; i<heroes.length; i++) {
+				heroes[i].addMouseListener(s);
+			}
+		}
+	}
+	public class DisplaySelection extends JSplitPane{
+		JLabel hero1;
+		JLabel hero2;
+		JSplitPane showHeroes;
+		JButton confirm;
+		public DisplaySelection() {
+			super();
+			this.setOrientation(JSplitPane.VERTICAL_SPLIT);
+			this.setResizeWeight(0.5);
+			showHeroes = new JSplitPane();
+			showHeroes.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
+			showHeroes.setResizeWeight(0.5);
+			confirm = new JButton("Confirm");
+			this.setTopComponent(showHeroes);
+			this.setBottomComponent(confirm);
+		}
+		public void updateHeroes(Hero update) {
+			if(FirstHero==null) {
+				hero1 = new JLabel(update.getName());
+			}
+			else {
+				hero1 = new JLabel(FirstHero.getName());
+				if(SecondHero==null) {
+					hero2 = new JLabel(update.getName());
+				}
+				else {
+					hero2 = new JLabel(SecondHero.getName());
+				}
+			}
+			showHeroes.setLeftComponent(hero1);
+			showHeroes.setRightComponent(hero2);
+			this.revalidate();
+			showHeroes.repaint();
+			this.repaint();
+		}
+		public void addListener(HeroSelectionWindow s) {
+			confirm.addMouseListener(s);
+		}
+	}
+	Heroes heroes;
+	JPanel selectHeroes;
+	DisplaySelection display;
 	JSplitPane Splitter;
-	JLabel Selected;
 	Hero FirstHero;
 	Hero SecondHero;
 	boolean isConfirmed;
 	Hero temp;
-	public HeroSelectionWindow () {
+	public HeroSelectionWindow () throws CloneNotSupportedException, IOException {
 		super();
+		heroes = new Heroes();
+		heroes.addListeners(this);
 		this.Splitter = new JSplitPane();
 		Splitter.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
-		Splitter.setSize(400,400);
+		Splitter.setResizeWeight(0.5);
+		Splitter.setSize(600,600);
 		Splitter.setVisible(true);
-		Heroes = new JPanel();
-		Heroes.setLayout(new GridLayout(3,2));
-		Heroes.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
-		this.Hunter = new JButton("Hunter");
-		this.Mage = new JButton("Mage");
-		this.Paladin = new JButton("Paladin");
-		this.Priest = new JButton("Priest");
-		this.Warlock = new JButton("Warlock");
-		Heroes.add(Hunter);
-		Heroes.add(Mage);
-		Heroes.add(Paladin);
-		Heroes.add(Priest);
-		Heroes.add(Warlock);
-		Splitter.setLeftComponent(Heroes);
-		display = new JPanel();
-		display.setLayout(new GridLayout());
-		display.setVisible(true);
-		this.Confirm = new JButton("Confirm");
-		display.add(Confirm);
+		selectHeroes = new JPanel();
+		selectHeroes.setLayout(new GridLayout(3,2));
+		selectHeroes.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+		for(int i = 0; i<heroes.heroes.length;i++) {
+			selectHeroes.add(heroes.heroes[i]);
+		}
+		Splitter.setLeftComponent(selectHeroes);
+		display = new DisplaySelection();
+		display.addListener(this);
 		Splitter.setRightComponent(display);
 		this.add(Splitter);
 		this.isConfirmed = false;
 		this.setVisible(true);
-		this.setSize(500,500);
+		this.setSize(700,700);
 	}
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		if(e.getSource() == this.Hunter) {
-			try {
-				temp = new Hunter();
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (CloneNotSupportedException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+		for(int i = 0; i<heroes.heroes.length;i++) {
+			if(e.getSource() == heroes.heroes[i]) {
+				temp = heroes.heroes[i].related;
 			}
-			if(e.getSource() == this.Mage) {
-				try {
-					temp = new Mage();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (CloneNotSupportedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
 		}
-			if(e.getSource() == this.Paladin) {
-				try {
-					temp = new Paladin();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (CloneNotSupportedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-		}
-			if(e.getSource() == this.Priest) {
-				try {
-					temp = new Priest();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (CloneNotSupportedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-		}
-			if(e.getSource() == this.Warlock) {
-				try {
-					temp = new Warlock();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (CloneNotSupportedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-		}
-	}
-		if(e.getSource() == this.Confirm) {
-			if(!isConfirmed) {
-			FirstHero = temp;
+		if(e.getSource() == display.confirm) {
+			if(FirstHero==null) {
+				FirstHero = temp;
 			}
-			
-			
+			else {
+				SecondHero = temp;
+			}
 		}
-}	
+		
+		display.updateHeroes(temp);
 
+	}	
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		if(e.getSource() ==  this.Hunter) {
-			Selected = new JLabel("<html>" + "<h1>Rexxar</h1>");
-		}
-		if(e.getSource() ==  this.Mage) {
-			Selected = new JLabel("<html>" + "<h1>Jaina Proudmoore</h1>");
+		for(int i = 0; i<heroes.heroes.length;i++) {
+			if(e.getSource() == heroes.heroes[i]) {
+				temp = heroes.heroes[i].related;
 			}
-		if(e.getSource() ==  this.Paladin) {
-			Selected = new JLabel("<html>" + "<h1>Uther Lightbringer</h1>");
 		}
-		if (e.getSource() == this.Priest) {
-			Selected = new JLabel("<html>" + "<h1>Anduin Wrynn</h1>");
-		}
-		if(e.getSource() == this.Warlock) {
-			Selected = new JLabel("<html>" + "<h1>Gul'dan</h1>");
-		}
+		display.updateHeroes(temp);
 	}
 
 	@Override

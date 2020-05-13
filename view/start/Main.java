@@ -24,6 +24,7 @@ public class Main {
 		//Subclass JFrame like in GameWindow, then create its specific GUI components for
 		//hero selection, then return selected heroes here and pass them to GameWindow
 		HeroSelectionWindow select = new HeroSelectionWindow();
-		GameWindow main = new GameWindow(hunter, paladin);
+		while(select.FirstHero == null && select.SecondHero == null);
+		GameWindow main = new GameWindow(select.FirstHero, select.SecondHero);
 	}
 }
