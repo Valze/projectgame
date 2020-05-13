@@ -19,4 +19,8 @@ public class FieldPanel extends JSplitPane {
 		this.setResizeWeight(0.5);
 		this.setSize(200,200);
 	}
+	public void addListeners(GameWindow o) {
+		firstField.addListeners(o);
+		secondField.addListeners(o);
+	}
 }

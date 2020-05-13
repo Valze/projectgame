@@ -28,11 +28,24 @@ public class HeroPanel extends JPanel{
 			}
 		}
 	}
-	Hero related;
-	JLabel heroName;
+	public class HeroButton extends JButton {
+		Hero related;
+		public HeroButton(Hero related, String heroInfo) {
+			super(heroInfo);
+			this.related = related;
+		}
+	}
+	HeroButton hero;
 	JButton heroPower;
 	HeroHand cards;
 	JPanel cardHolder; //using a panel to center cards
+	public void addListeners(GameWindow o) {
+		this.heroPower.addMouseListener(o);
+		hero.addMouseListener(o);
+		for(int i = 0; i< cards.hand.length; i++) {
+			cards.hand[i].addMouseListener(o);
+		}
+	}
 	public void hideCards() {
 		cardHolder.remove(cards);
 		cardHolder.add(cards.concealed);
@@ -43,17 +56,16 @@ public class HeroPanel extends JPanel{
 	public HeroPanel(Hero h, boolean Up) {
 		super(new BorderLayout());
 		this.cardHolder = new JPanel();
-		related = h;
-		String heroInfo = "<div style='text-align:center;'>" + "<h1>"+h.getName() + "</h1>"
+		String heroInfo = "<html><div style='text-align:center;'>" + "<h1>"+h.getName() + "</h1>"
 						+ "<br>HP: " + h.getCurrentHP() 
 						+"<br>Mana: "+ h.getCurrentManaCrystals() +" out of " +h.getTotalManaCrystals()
-						+"<br>Cards in deck: "+h.getDeck().size()+"</div>";
-		heroName = new JLabel("<html> "+ heroInfo + "</html>");
+						+"<br>Cards in deck: "+h.getDeck().size()+"</div></html>";
+		hero = new HeroButton(h, heroInfo);
 		cards = new HeroHand(h.getHand().toArray());
 		cardHolder.add(cards);
 		heroPower = new JButton("<html> Use Hero Power </html>");
 		JPanel internal = new JPanel(); //JPanel to center Hero information
-		internal.add(heroName);
+		internal.add(hero);
 		internal.add(heroPower);
 		Box box = new Box(BoxLayout.Y_AXIS); //Layout used to center said JPanel
         box.add(Box.createVerticalGlue());

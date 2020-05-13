@@ -25,6 +25,7 @@ import model.cards.Card;
 import model.cards.minions.Minion;
 import model.cards.spells.AOESpell;
 import model.cards.spells.FieldSpell;
+import model.cards.spells.HeroTargetSpell;
 import model.cards.spells.LeechingSpell;
 import model.cards.spells.MinionTargetSpell;
 import model.cards.spells.Spell;
@@ -43,30 +44,83 @@ public class GameWindow extends JFrame implements MouseListener, GameListener  {
 	JButton endTurn;
 	JLabel selected;
 	Card selectedCard;
-	
+	boolean selectTarget;
+	Hero target;
 	public GameWindow(Hero p1, Hero p2) throws FullHandException, CloneNotSupportedException {
 		super();
-		game = new Game(p1, p2);
-		game.setListener(this);
-		this.firstHero = new HeroPanel(game.getCurrentHero(), false);
-		this.secondHero = new HeroPanel(game.getOpponent(), true);
-		this.endTurn = new JButton("End turn");
-		this.field = new FieldPanel(game.getCurrentHero(), game.getOpponent());
-		endTurn.addMouseListener(this);
-		firstHero.heroPower.addMouseListener(this);
-		secondHero.heroPower.addMouseListener(this);
-		for(int handButton = 0; handButton<firstHero.cards.hand.length;handButton++) {
-			firstHero.cards.hand[handButton].addMouseListener(this);
-		}
+		this.game = new Game(p1, p2);
+		this.game.setListener(this);
 		this.setLayout(new BorderLayout());
-		this.add(BorderLayout.SOUTH, firstHero);
+		this.updateGame();
+		this.endTurn = new JButton("End turn");
+		this.endTurn.addMouseListener(this);
 		this.add(BorderLayout.EAST, endTurn);
-		JTextArea text = new JTextArea();
-		this.add(BorderLayout.CENTER, field);
-		this.add(BorderLayout.NORTH, secondHero);
+		this.addListeners();
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setSize(600, 600);
 		this.setVisible(true);
+	}
+	public void updateGame() {
+		//first remove old GUI components
+		
+		if(firstHero!=null) {
+			this.remove(firstHero);
+			this.remove(secondHero);
+			this.remove(field);
+		}
+		//second initialize new GUI components
+		this.firstHero = new HeroPanel(game.getCurrentHero(), false);
+		this.secondHero = new HeroPanel(game.getOpponent(), true);
+		this.field = new FieldPanel(game.getCurrentHero(), game.getOpponent());
+		//add them back to screen
+		this.add(BorderLayout.SOUTH, firstHero);
+		this.add(BorderLayout.CENTER, field);
+		this.add(BorderLayout.NORTH, secondHero);
+	}
+	public void addListeners() {
+		//listens to button clicks from both heroes' hands,
+		//fields and hero powers
+		firstHero.addListeners(this);
+		secondHero.addListeners(this);
+		field.addListeners(this);
+	}
+	public void handleHeroPowers(Hero target) throws FullHandException, CloneNotSupportedException {
+		if(selectTarget) {
+			System.out.print("HELLO");
+			if(game.getCurrentHero() instanceof Priest) {
+				try {
+					if(target!=null && target!=game.getOpponent()) {
+						((Priest)game.getCurrentHero()).useHeroPower(target);
+						}
+					else if(selectedCard!=null && selectedCard instanceof Minion) {
+						((Priest)game.getCurrentHero()).useHeroPower((Minion)selectedCard);
+						}
+					}
+				catch (NotEnoughManaException | HeroPowerAlreadyUsedException | NotYourTurnException
+							| FullFieldException e1) {
+						Message popup = new Message(this, e1.getMessage());
+						e1.printStackTrace();
+					}		
+			}
+			else {
+				try {
+					System.out.print("FUCK");
+					if(target!=null&&target!=game.getCurrentHero()) {
+						((Mage)game.getCurrentHero()).useHeroPower(target);
+						}
+					else if(selectedCard!=null && selectedCard instanceof Minion) {
+						((Mage)game.getCurrentHero()).useHeroPower((Minion)selectedCard);
+						}
+					}
+				catch (NotEnoughManaException | HeroPowerAlreadyUsedException | NotYourTurnException
+							| FullFieldException e1) {
+						Message popup = new Message(this, e1.getMessage());
+						e1.printStackTrace();
+					}	
+			}
+			this.target = null;
+			selectTarget = false;
+		}
 	}
 	@Override
 	public void mouseClicked(MouseEvent e) {
@@ -80,25 +134,23 @@ public class GameWindow extends JFrame implements MouseListener, GameListener  {
 			}
 			if (e.getSource()==firstHero.heroPower) {
 				try {
-					game.getCurrentHero().useHeroPower();
-				} catch (NotEnoughManaException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (HeroPowerAlreadyUsedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (NotYourTurnException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (FullFieldException e1) {
-					// TODO Auto-generated catch block
+					if(firstHero.hero.related instanceof Mage || firstHero.hero.related instanceof Priest) {
+						selectTarget = true;
+					}
+					else {
+						game.getCurrentHero().useHeroPower();
+					}
+				} catch (NotEnoughManaException | HeroPowerAlreadyUsedException | NotYourTurnException
+						| FullFieldException e1) {
+					Message popup = new Message(this, e1.getMessage());
 					e1.printStackTrace();
 				}
+				
 			}
 			if (e.getSource()==secondHero.heroPower) {
-				//pop-out window for illegal action
+				Message popup = new Message(this, "Can't use other player's hero power");
 			}
-			//might be a good idea to put all of the minion attack/spelCast logic in a separate method
+			//might be a good idea to put all of the minion attack/spellCast logic in a separate method
 			//and call it here
 			//TODO: allow player to actually play a card, DONE
 			//TODO: allow player to cast spells, done
@@ -120,7 +172,40 @@ public class GameWindow extends JFrame implements MouseListener, GameListener  {
 					
 				}
 			}
+			if(e.getSource()==secondHero.hero) {
+				target = secondHero.hero.related;
+				handleHeroPowers(target);
+			}
+			if(e.getSource()==firstHero.hero) {
+				target = firstHero.hero.related;
+				handleHeroPowers(target);
+			}
 			
+			if(selectedCard!=null && target!=null && target!=game.getCurrentHero()) {
+				if(selectedCard instanceof Minion) {
+					Minion selectedMinion = (Minion) selectedCard;
+					try {
+						game.getCurrentHero().attackWithMinion(selectedMinion, target);
+					} 
+					catch (CannotAttackException | NotYourTurnException | TauntBypassException
+							| InvalidTargetException | NotSummonedException e1) {
+						Message popup = new Message(this, e1.getMessage());
+						e1.printStackTrace();
+					}
+				}
+				else {
+					Spell selectedSpell = (Spell) selectedCard;
+					if(selectedSpell instanceof HeroTargetSpell) {
+						try {
+							game.getCurrentHero().castSpell((HeroTargetSpell)selectedSpell, target);
+						} catch (NotYourTurnException | NotEnoughManaException e1) {
+							
+							e1.printStackTrace();
+						}
+					}
+				}
+				selectedCard = null;
+			}
 			if(selectedCard!=null && toAttack!=null) {
 				if(selectedCard instanceof Minion) {
 					Minion selectedMinion = (Minion) selectedCard;
@@ -129,7 +214,7 @@ public class GameWindow extends JFrame implements MouseListener, GameListener  {
 					} 
 					catch (CannotAttackException | NotYourTurnException | TauntBypassException
 							| InvalidTargetException | NotSummonedException e1) {
-						// TODO Handle exceptions and output errors
+						Message popup = new Message(this, e1.getMessage());
 						e1.printStackTrace();
 					}
 					selectedCard = null;
@@ -141,7 +226,7 @@ public class GameWindow extends JFrame implements MouseListener, GameListener  {
 						try {
 							game.getCurrentHero().castSpell((MinionTargetSpell)selectedSpell, toAttack);
 						} catch (NotYourTurnException | NotEnoughManaException | InvalidTargetException e1) {
-							// TODO Handle exceptions and output errors
+							Message popup = new Message(this, e1.getMessage());
 							e1.printStackTrace();
 						}
 					}
@@ -149,7 +234,7 @@ public class GameWindow extends JFrame implements MouseListener, GameListener  {
 						try {
 							game.getCurrentHero().castSpell((LeechingSpell)selectedSpell, toAttack);
 						} catch (NotYourTurnException | NotEnoughManaException e1) {
-							// TODO Auto-generated catch block
+							Message popup = new Message(this, e1.getMessage());
 							e1.printStackTrace();
 						}
 					}
@@ -164,7 +249,7 @@ public class GameWindow extends JFrame implements MouseListener, GameListener  {
 						try {
 							game.getCurrentHero().playMinion(minionToPlay);
 						} catch (NotYourTurnException | NotEnoughManaException | FullFieldException e1) {
-							// TODO Auto-generated catch block
+							Message popup = new Message(this, e1.getMessage());
 							e1.printStackTrace();
 						}
 					}
@@ -174,7 +259,7 @@ public class GameWindow extends JFrame implements MouseListener, GameListener  {
 							try {
 								game.getCurrentHero().castSpell((AOESpell) selectedCard, game.getOpponent().getField());
 							} catch (NotYourTurnException | NotEnoughManaException e1) {
-								// TODO Auto-generated catch block
+								Message popup = new Message(this, e1.getMessage());
 								e1.printStackTrace();
 							}
 						}
@@ -182,7 +267,7 @@ public class GameWindow extends JFrame implements MouseListener, GameListener  {
 							try {
 								game.getCurrentHero().castSpell((AOESpell) selectedCard, game.getOpponent().getField());
 							} catch (NotYourTurnException | NotEnoughManaException e1) {
-								// TODO Auto-generated catch block
+								Message popup = new Message(this, e1.getMessage());
 								e1.printStackTrace();
 							}
 						}
@@ -191,36 +276,21 @@ public class GameWindow extends JFrame implements MouseListener, GameListener  {
 								game.getCurrentHero().castSpell((FieldSpell) selectedCard);
 								
 							} catch (NotYourTurnException | NotEnoughManaException e1) {
-								// TODO Auto-generated catch block
+								Message popup = new Message(this, e1.getMessage());
 								e1.printStackTrace();
 							}
 						}
 					}
 				}
 			}
-			//first remove old GUI components
-			this.remove(firstHero);
-			this.remove(secondHero);
-			this.remove(field);
-			//second initialize new GUI components
-			firstHero = new HeroPanel(game.getCurrentHero(), false);
-			secondHero = new HeroPanel(game.getOpponent(), true);
-			field = new FieldPanel(game.getCurrentHero(), game.getOpponent());
-			firstHero.heroPower.addMouseListener(this);
-			secondHero.heroPower.addMouseListener(this);
-			for(int handButton = 0; handButton<firstHero.cards.hand.length;handButton++) {
-				firstHero.cards.hand[handButton].addMouseListener(this);
+			for(int handCard2 = 0; handCard2<secondHero.cards.hand.length;handCard2++) {
+				if (e.getSource()==secondHero.cards.hand[handCard2]) {
+					Message popup = new Message(this, "Can't select other player's cards");
+				}
 			}
-			for(int i = 0; i<field.firstField.cards.length; i++) {
-				field.firstField.cards[i].addMouseListener(this);
-			}
-			for(int j = 0; j<field.secondField.cards.length; j++) {
-				field.secondField.cards[j].addMouseListener(this);
-			}
-			//add them back to the screen
-			this.add(BorderLayout.SOUTH, firstHero);
-			this.add(BorderLayout.NORTH, secondHero);
-			this.add(BorderLayout.CENTER, field);
+			
+			updateGame();
+			addListeners();
 			if(selectedCard!=null) {
 				if(selected!=null) {
 					this.remove(selected);
@@ -233,12 +303,13 @@ public class GameWindow extends JFrame implements MouseListener, GameListener  {
 			firstHero.repaint();
 			secondHero.repaint();
 			field.repaint();
+			endTurn.repaint();
 			if(this.selected!=null) {
 				selected.repaint();
 			}
 			this.repaint();
 		} catch (FullHandException e1) {
-			// TODO show FullHandException error
+			Message popup = new Message(this, e1.getMessage());
 			e1.printStackTrace();
 		} catch (CloneNotSupportedException e1) {
 			// TODO Auto-generated catch block

@@ -13,4 +13,9 @@ public class HeroField extends JPanel {
 			this.add(cards[i]);
 		}
 	}
+	public void addListeners(GameWindow o) {
+		for(int i = 0; i<cards.length; i++) {
+			cards[i].addMouseListener(o);
+		}
+	}
 }

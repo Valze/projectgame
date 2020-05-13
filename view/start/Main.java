@@ -18,7 +18,7 @@ import model.heroes.Mage;
 public class Main {
 	public static void main(String[] args) throws IOException, CloneNotSupportedException, FullHandException {
 		Hero hunter = new Paladin();
-		Hero paladin = new Paladin();
+		Hero paladin = new Mage();
 		//TODO: replace hunter,paladin with heroes from a selection screen
 		//How?
 		//Subclass JFrame like in GameWindow, then create its specific GUI components for
