@@ -48,7 +48,7 @@ public class HeroSelectionWindow extends JFrame implements MouseListener {
 			this.setBottomComponent(confirm);
 		}
 		public void updateHeroes(Hero update) {
-			if(FirstHero==null) {
+			if(FirstHero==null && temp==null) {
 				hero1 = new JLabel(update.getName());
 			}
 			else {
@@ -76,7 +76,6 @@ public class HeroSelectionWindow extends JFrame implements MouseListener {
 	JSplitPane Splitter;
 	Hero FirstHero;
 	Hero SecondHero;
-	boolean isConfirmed;
 	Hero temp;
 	public HeroSelectionWindow () throws CloneNotSupportedException, IOException {
 		super();
@@ -98,7 +97,6 @@ public class HeroSelectionWindow extends JFrame implements MouseListener {
 		display.addListener(this);
 		Splitter.setRightComponent(display);
 		this.add(Splitter);
-		this.isConfirmed = false;
 		this.setVisible(true);
 		this.setSize(700,700);
 	}
@@ -112,23 +110,29 @@ public class HeroSelectionWindow extends JFrame implements MouseListener {
 		if(e.getSource() == display.confirm) {
 			if(FirstHero==null) {
 				FirstHero = temp;
+				temp = null;
 			}
 			else {
 				SecondHero = temp;
 			}
 		}
-		
+		if(temp==null) {
+			Message message = new Message(this, "You must select a hero");
+		}
 		display.updateHeroes(temp);
 
 	}	
 	@Override
 	public void mouseEntered(MouseEvent e) {
+		Hero derp = null;
 		for(int i = 0; i<heroes.heroes.length;i++) {
 			if(e.getSource() == heroes.heroes[i]) {
-				temp = heroes.heroes[i].related;
+				derp = heroes.heroes[i].related;
 			}
 		}
-		display.updateHeroes(temp);
+		if(derp!=null) {
+			display.updateHeroes(derp);
+		}
 	}
 
 	@Override
