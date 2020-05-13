@@ -36,7 +36,8 @@ public class HeroSelectionWindow extends JFrame implements MouseListener {
 		Splitter.setSize(400,400);
 		Splitter.setVisible(true);
 		Heroes = new JPanel();
-		Heroes.setLayout(new GridLayout());
+		Heroes.setLayout(new GridLayout(3,2));
+		Heroes.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		this.Hunter = new JButton("Hunter");
 		this.Mage = new JButton("Mage");
 		this.Paladin = new JButton("Paladin");
