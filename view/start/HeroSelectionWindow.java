@@ -8,6 +8,8 @@ import java.io.IOException;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSplitPane;
 
 import model.heroes.*;
 
@@ -19,6 +21,9 @@ public class HeroSelectionWindow extends JFrame implements MouseListener {
 	JButton Warlock;
 	JButton Priest;
 	JButton Confirm;
+	JPanel Heroes;
+	JPanel display;
+	JSplitPane Splitter;
 	JLabel Selected;
 	Hero FirstHero;
 	Hero SecondHero;
@@ -26,21 +31,34 @@ public class HeroSelectionWindow extends JFrame implements MouseListener {
 	Hero temp;
 	public HeroSelectionWindow () {
 		super();
+		this.Splitter = new JSplitPane();
+		Splitter.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
+		Splitter.setSize(400,400);
+		Splitter.setVisible(true);
+		Heroes = new JPanel();
+		Heroes.setLayout(new GridLayout());
 		this.Hunter = new JButton("Hunter");
 		this.Mage = new JButton("Mage");
 		this.Paladin = new JButton("Paladin");
 		this.Priest = new JButton("Priest");
 		this.Warlock = new JButton("Warlock");
+		Heroes.add(Hunter);
+		Heroes.add(Mage);
+		Heroes.add(Paladin);
+		Heroes.add(Priest);
+		Heroes.add(Warlock);
+		Splitter.setLeftComponent(Heroes);
+		display = new JPanel();
+		display.setLayout(new GridLayout());
+		display.setVisible(true);
 		this.Confirm = new JButton("Confirm");
+		display.add(Confirm);
+		Splitter.setRightComponent(display);
+		this.add(Splitter);
 		this.isConfirmed = false;
-		Hunter.addMouseListener(this);
-		Mage.addMouseListener(this);
-		Paladin.addMouseListener(this);
-		Priest.addMouseListener(this);
-		Warlock.addMouseListener(this);
-		Confirm.addMouseListener(this);
+		this.setVisible(true);
+		this.setSize(500,500);
 	}
-
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		if(e.getSource() == this.Hunter) {

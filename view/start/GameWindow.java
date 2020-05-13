@@ -204,6 +204,7 @@ public class GameWindow extends JFrame implements MouseListener, GameListener  {
 						}
 					}
 				}
+				target = null;
 				selectedCard = null;
 			}
 			if(selectedCard!=null && toAttack!=null) {
@@ -358,7 +359,11 @@ public class GameWindow extends JFrame implements MouseListener, GameListener  {
 	}
 	@Override
 	public void onGameOver() {
-		// TODO add game end logic
-		
+		if(game.getCurrentHero().getCurrentHP()!=0) {
+			Message message = new Message(this, game.getCurrentHero().getName() +" has won!");
+		}
+		else {
+			Message message = new Message(this, game.getOpponent().getName() +" has won!");
+		}
 	}
 }
