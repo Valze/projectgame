@@ -27,6 +27,7 @@ public class Main {
 		while(!(select.FirstHero != null && select.SecondHero != null)) {
 			System.out.println();
 		}
+		select.dispose();
 		GameWindow main = new GameWindow(select.FirstHero, select.SecondHero);
 	}
 }
