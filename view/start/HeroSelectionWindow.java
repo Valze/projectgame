@@ -79,6 +79,7 @@ public class HeroSelectionWindow extends JFrame implements MouseListener {
 	Hero temp;
 	public HeroSelectionWindow () throws CloneNotSupportedException, IOException {
 		super();
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		heroes = new Heroes();
 		heroes.addListeners(this);
 		this.Splitter = new JSplitPane();
@@ -108,17 +109,21 @@ public class HeroSelectionWindow extends JFrame implements MouseListener {
 			}
 		}
 		if(e.getSource() == display.confirm) {
-			if(FirstHero==null) {
-				FirstHero = temp;
-				temp = null;
+			if(temp==null) {
+				Message message = new Message(this, "You must select a hero");
 			}
 			else {
-				SecondHero = temp;
+				if(FirstHero==null) {
+					FirstHero = temp;
+					temp = null;
+				}
+				else {
+					if(SecondHero==null)
+						SecondHero = temp;
+				}
 			}
 		}
-		if(temp==null) {
-			Message message = new Message(this, "You must select a hero");
-		}
+		
 		display.updateHeroes(temp);
 
 	}	

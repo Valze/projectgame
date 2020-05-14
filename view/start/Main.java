@@ -17,14 +17,16 @@ import model.heroes.Warlock;
 import model.heroes.Mage;
 public class Main {
 	public static void main(String[] args) throws IOException, CloneNotSupportedException, FullHandException {
-		Hero hunter = new Paladin();
-		Hero paladin = new Mage();
+		//Hero hunter = new Paladin();
+		//Hero paladin = new Mage();
 		//TODO: replace hunter,paladin with heroes from a selection screen
 		//How?
 		//Subclass JFrame like in GameWindow, then create its specific GUI components for
 		//hero selection, then return selected heroes here and pass them to GameWindow
 		HeroSelectionWindow select = new HeroSelectionWindow();
-		while(select.FirstHero == null && select.SecondHero == null);
+		while(!(select.FirstHero != null && select.SecondHero != null)) {
+			System.out.println();
+		}
 		GameWindow main = new GameWindow(select.FirstHero, select.SecondHero);
 	}
 }

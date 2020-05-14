@@ -9,3 +9,5 @@ test_minion.csv
 bin/
 
 .classpath
+
+view/start/Main.java
