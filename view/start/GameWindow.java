@@ -24,10 +24,12 @@ import exceptions.TauntBypassException;
 import model.cards.Card;
 import model.cards.minions.Minion;
 import model.cards.spells.AOESpell;
+import model.cards.spells.DivineSpirit;
 import model.cards.spells.FieldSpell;
 import model.cards.spells.HeroTargetSpell;
 import model.cards.spells.LeechingSpell;
 import model.cards.spells.MinionTargetSpell;
+import model.cards.spells.SealOfChampions;
 import model.cards.spells.Spell;
 import model.heroes.Hero;
 import model.heroes.Hunter;
@@ -224,11 +226,26 @@ public class GameWindow extends JFrame implements MouseListener, GameListener  {
 				else {
 					Spell selectedSpell = (Spell) selectedCard;
 					if(selectedSpell instanceof MinionTargetSpell) {
-						try {
-							game.getCurrentHero().castSpell((MinionTargetSpell)selectedSpell, toAttack);
-						} catch (NotYourTurnException | NotEnoughManaException | InvalidTargetException e1) {
-							Message popup = new Message(this, e1.getMessage());
-							e1.printStackTrace();
+						boolean ownMinion = false;
+						for(int i = 0; i<field.firstField.cards.length; i++) {
+							if (toAttack == (Minion) field.firstField.cards[i].card)
+								ownMinion = true;		
+						}
+						if(ownMinion && !(selectedSpell instanceof DivineSpirit || selectedSpell instanceof SealOfChampions) ) {
+							Message popup = new Message(this, "Cannot attack friendly Minionn.");
+						}
+						else {
+							if(!ownMinion && (selectedSpell instanceof DivineSpirit || selectedSpell instanceof SealOfChampions) ) {
+								Message popup = new Message(this, "Cannot aid enemy Minionn.");
+							}
+							else {
+								try {
+									game.getCurrentHero().castSpell((MinionTargetSpell)selectedSpell, toAttack);
+								} catch (NotYourTurnException | NotEnoughManaException | InvalidTargetException e1) {
+									Message popup = new Message(this, e1.getMessage());
+									e1.printStackTrace();
+								}
+							}
 						}
 					}
 					else if(selectedSpell instanceof LeechingSpell) {
