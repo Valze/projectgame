@@ -52,6 +52,7 @@ public class GameWindow extends JFrame implements MouseListener, GameListener  {
 		super();
 		this.game = new Game(p1, p2);
 		this.game.setListener(this);
+		this.setTitle("Hearthstone");
 		this.setLayout(new BorderLayout());
 		this.updateGame();
 		this.endTurn = new JButton("End turn");
@@ -379,6 +380,14 @@ public class GameWindow extends JFrame implements MouseListener, GameListener  {
 	}
 	@Override
 	public void onGameOver() {
-		Message message = new Message(this, game.getCurrentHero().getName() +" has won!");
+	//	Message message = new Message(this, game.getCurrentHero().getName() +" has won!");
+		JFrame done = new JFrame();
+		done.setTitle("The End");
+		done.setSize(300,300);
+		done.setVisible(true);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		done.getContentPane().add(new JLabel("<html> <body style='text-align: center; font-size: large;'>"
+				+game.getCurrentHero().getName() +" has won!"+"</body></html>"));
+		this.dispose();
 	}
 }
