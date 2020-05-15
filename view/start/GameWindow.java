@@ -199,7 +199,7 @@ public class GameWindow extends JFrame implements MouseListener, GameListener  {
 						try {
 							game.getCurrentHero().castSpell((HeroTargetSpell)selectedSpell, target);
 						} catch (NotYourTurnException | NotEnoughManaException e1) {
-							
+							Message popup = new Message(this, e1.getMessage());
 							e1.printStackTrace();
 						}
 					}

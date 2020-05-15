@@ -134,6 +134,23 @@ public class HeroSelectionWindow extends JFrame implements MouseListener {
 				if(FirstHero==null) {
 					FirstHero = temp;
 					temp = null;
+					
+					//Replace the selectHeroes panel with a new one to allow choosing the same Hero
+					try {
+						heroes = new Heroes();
+					} catch (CloneNotSupportedException e1) {
+						e1.printStackTrace();
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+					heroes.addListeners(this);
+					selectHeroes = new JPanel();
+					selectHeroes.setLayout(new GridLayout(3,2));
+					selectHeroes.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+					for(int i = 0; i<heroes.heroes.length;i++) {
+						selectHeroes.add(heroes.heroes[i]);
+					}
+					Splitter.setLeftComponent(selectHeroes);
 				}
 				else {
 					if(SecondHero==null)
