@@ -153,9 +153,9 @@ public class Game implements ActionValidator , HeroListener {
 		}
 		else {
 			currentHero.setTotalManaCrystals(currentHero.getTotalManaCrystals()+1);
-			opponent.setTotalManaCrystals(opponent.getTotalManaCrystals()+1);
+			//opponent.setTotalManaCrystals(opponent.getTotalManaCrystals()+1);
 			currentHero.setCurrentManaCrystals(currentHero.getTotalManaCrystals());
-			opponent.setCurrentManaCrystals(opponent.getTotalManaCrystals());
+			//opponent.setCurrentManaCrystals(opponent.getTotalManaCrystals());
 		}
 		currentHero.setHeroPowerUsed(false);
 		opponent.setHeroPowerUsed(false);
