@@ -140,7 +140,7 @@ public class Minion extends Card implements Cloneable {
 		}
 		String taunt = isTaunt()? "<br>Taunt":"";
 		String divine = isDivine()? "<br>Divine":"";
-		String charge = isSleeping()? "":"<br>Charge";
+		String charge = isSleeping()? "<br>Cannot attack":"<br>Can attack";
 		return super.toString() 
 				+ "<br>Attack: " +  this.attack
 				+ "<br>HP: " + this.currentHP 

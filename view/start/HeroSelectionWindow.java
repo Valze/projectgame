@@ -183,7 +183,7 @@ public class HeroSelectionWindow extends JFrame implements MouseListener {
 				display.hero1 = new JLabel("Hero 1 not chosen.");
 				display.showHeroes.setLeftComponent(display.hero1);
 			}
-			else {
+			else if(SecondHero==null){
 				display.hero2 = new JLabel("Hero 2 not chosen.");
 				display.showHeroes.setRightComponent(display.hero2);
 			}

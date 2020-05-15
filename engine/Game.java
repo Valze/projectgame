@@ -82,7 +82,7 @@ public class Game implements ActionValidator , HeroListener {
 		}
 		else {
 			for(Minion i :opponent.getField()){
-				if(i.isTaunt() == target.isTaunt()) {
+				if(i.isTaunt() && target.isTaunt()) {
 					attacker.attack(target);
 				}
 				else if(i.isTaunt()==true) {
