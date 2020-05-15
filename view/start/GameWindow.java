@@ -86,9 +86,8 @@ public class GameWindow extends JFrame implements MouseListener, GameListener  {
 		secondHero.addListeners(this);
 		field.addListeners(this);
 	}
-	public void handleHeroPowers(Hero target) throws FullHandException, CloneNotSupportedException {
-		if(selectTarget) {
-			System.out.print("HELLO");
+	public void handleHeroPowers(Hero target, Minion toAttack) throws FullHandException, CloneNotSupportedException {
+		if(selectTarget && (target!=null || toAttack!=null)) {
 			if(game.getCurrentHero() instanceof Priest) {
 				try {
 					if(target!=null && target!=game.getOpponent()) {
@@ -106,12 +105,11 @@ public class GameWindow extends JFrame implements MouseListener, GameListener  {
 			}
 			else {
 				try {
-					System.out.print("BYE");
 					if(target!=null&&target!=game.getCurrentHero()) {
 						((Mage)game.getCurrentHero()).useHeroPower(target);
 						}
-					else if(selectedCard!=null && selectedCard instanceof Minion) {
-						((Mage)game.getCurrentHero()).useHeroPower((Minion)selectedCard);
+					else if(toAttack!=null) {
+						((Mage)game.getCurrentHero()).useHeroPower(toAttack);
 						}
 					}
 				catch (NotEnoughManaException | HeroPowerAlreadyUsedException | NotYourTurnException
@@ -156,11 +154,14 @@ public class GameWindow extends JFrame implements MouseListener, GameListener  {
 			//and call it here
 			//TODO: allow player to actually play a card, DONE
 			//TODO: allow player to cast spells, done
-			//TODO: allow player to target enemy hero with minions or spells
+			//TODO: allow player to target enemy hero with minions or spells, done
 			Minion toAttack = null;
 			for(int j = 0; j<field.secondField.cards.length; j++) {
 				if (e.getSource()==field.secondField.cards[j]) {
 					toAttack = (Minion) field.secondField.cards[j].card;
+					if(selectTarget && toAttack!=null) {
+						handleHeroPowers(null, toAttack);
+					}
 				}
 			}
 			for(int i = 0; i<field.firstField.cards.length; i++) {
@@ -176,11 +177,11 @@ public class GameWindow extends JFrame implements MouseListener, GameListener  {
 			}
 			if(e.getSource()==secondHero.hero) {
 				target = secondHero.hero.related;
-				handleHeroPowers(target);
+				handleHeroPowers(target, null);
 			}
 			if(e.getSource()==firstHero.hero) {
 				target = firstHero.hero.related;
-				handleHeroPowers(target);
+				handleHeroPowers(target, null);
 			}
 			
 			if(selectedCard!=null && target!=null && target!=game.getCurrentHero()) {
@@ -209,6 +210,7 @@ public class GameWindow extends JFrame implements MouseListener, GameListener  {
 				target = null;
 				selectedCard = null;
 			}
+			
 			if(selectedCard!=null && toAttack!=null) {
 				if(selectedCard instanceof Minion) {
 					Minion selectedMinion = (Minion) selectedCard;
@@ -236,7 +238,7 @@ public class GameWindow extends JFrame implements MouseListener, GameListener  {
 						}
 						else {
 							if(!ownMinion && (selectedSpell instanceof DivineSpirit || selectedSpell instanceof SealOfChampions) ) {
-								Message popup = new Message(this, "Cannot aid enemy Minionn.");
+								Message popup = new Message(this, "Cannot aid enemy Minion.");
 							}
 							else {
 								try {
@@ -359,7 +361,8 @@ public class GameWindow extends JFrame implements MouseListener, GameListener  {
 			}
 			selected = new JLabel("<html>"
 					+ "<h1>RESULT OF ATTACK</h1>"
-					+ "<br><h2>" + selectedMinion.getName()
+					+ "<br><h2> Your Minion </h2>"
+					+ "<br><h3>" + selectedMinion.getName()
 					+ "<br>HP: " + (selectedMinion.getCurrentHP() - toAttack.getAttack())
 					+ "</html>");
 			selected.setVisible(true);
@@ -376,11 +379,6 @@ public class GameWindow extends JFrame implements MouseListener, GameListener  {
 	}
 	@Override
 	public void onGameOver() {
-		if(game.getCurrentHero().getCurrentHP()!=0) {
-			Message message = new Message(this, game.getCurrentHero().getName() +" has won!");
-		}
-		else {
-			Message message = new Message(this, game.getOpponent().getName() +" has won!");
-		}
+		Message message = new Message(this, game.getCurrentHero().getName() +" has won!");
 	}
 }
