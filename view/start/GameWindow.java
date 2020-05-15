@@ -232,7 +232,7 @@ public class GameWindow extends JFrame implements MouseListener, GameListener  {
 								ownMinion = true;		
 						}
 						if(ownMinion && !(selectedSpell instanceof DivineSpirit || selectedSpell instanceof SealOfChampions) ) {
-							Message popup = new Message(this, "Cannot attack friendly Minionn.");
+							Message popup = new Message(this, "Cannot attack friendly Minion.");
 						}
 						else {
 							if(!ownMinion && (selectedSpell instanceof DivineSpirit || selectedSpell instanceof SealOfChampions) ) {
