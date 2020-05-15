@@ -59,7 +59,10 @@ public class Minion extends Card implements Cloneable {
 	}
 	public void setCurrentHP(int currentHP) {
 		if(currentHP<=0) this.minionDeath();
-		else
+		else if(currentHP> this.maxHP) {
+			this.currentHP = this.maxHP;
+			return;
+		}
 		this.currentHP = currentHP;
 	}
 	public void setTaunt(boolean taunt) {
@@ -140,7 +143,7 @@ public class Minion extends Card implements Cloneable {
 		}
 		String taunt = isTaunt()? "<br>Taunt":"";
 		String divine = isDivine()? "<br>Divine":"";
-		String charge = isSleeping()? "<br>Cannot attack":"<br>Can attack";
+		String charge = isSleeping()? "":"<br>Charge";
 		return super.toString() 
 				+ "<br>Attack: " +  this.attack
 				+ "<br>HP: " + this.currentHP 
