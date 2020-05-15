@@ -385,7 +385,7 @@ public class GameWindow extends JFrame implements MouseListener, GameListener  {
 		done.setTitle("The End");
 		done.setSize(300,300);
 		done.setVisible(true);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		done.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		done.getContentPane().add(new JLabel("<html> <body style='text-align: center; font-size: large;'>"
 				+game.getCurrentHero().getName() +" has won!"+"</body></html>"));
 		this.dispose();
