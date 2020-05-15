@@ -207,6 +207,9 @@ public abstract class Hero implements MinionListener{
 		this.validator.validateManaCost((Card)s);
 		int h = s.performAction(m);
 		this.setCurrentHP(this.getCurrentHP() + h);
+		if(this.getCurrentHP()>=30) {
+			this.setCurrentHP(30);
+		}
 		this.hand.remove((Spell)s);
 		if(this instanceof Mage) {
 			for(Minion minion: this.field) {
