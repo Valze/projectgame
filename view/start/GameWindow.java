@@ -87,7 +87,7 @@ public class GameWindow extends JFrame implements MouseListener, GameListener  {
 		field.addListeners(this);
 	}
 	public void handleHeroPowers(Hero target, Minion toAttack) throws FullHandException, CloneNotSupportedException {
-		if(selectTarget && (target!=null || toAttack!=null)) {
+		if(selectTarget) {
 			if(game.getCurrentHero() instanceof Priest) {
 				try {
 					if(target!=null && target!=game.getOpponent()) {
@@ -172,7 +172,7 @@ public class GameWindow extends JFrame implements MouseListener, GameListener  {
 					else {
 						selectedCard = (Minion) field.firstField.cards[i].card;
 					}
-					
+					handleHeroPowers(null, toAttack);
 				}
 			}
 			if(e.getSource()==secondHero.hero) {
