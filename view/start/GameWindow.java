@@ -104,7 +104,7 @@ public class GameWindow extends JFrame implements MouseListener, GameListener  {
 			}
 			else {
 				try {
-					System.out.print("FUCK");
+					System.out.print("BYE");
 					if(target!=null&&target!=game.getCurrentHero()) {
 						((Mage)game.getCurrentHero()).useHeroPower(target);
 						}
